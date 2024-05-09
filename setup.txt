@@ -1,0 +1,14 @@
+npm instal
+npm install -g @vue/cli
+npm install -g @quasar/cli
+npm install @prisma/cli --save-dev
+npm install -g prisma
+npm install @prisma/cli
+npm install @prisma/client
+npx prisma db push
+thay doi env
+
+
+Run:
+quasar dev
+npm start
