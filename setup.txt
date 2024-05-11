@@ -5,6 +5,7 @@ npm install @prisma/cli --save-dev
 npm install -g prisma
 npm install @prisma/cli
 npm install @prisma/client
+npm i dotenv
 npx prisma db push
 thay doi env
 
