@@ -58,6 +58,7 @@ model User {
 
   @@fulltext([email])
   @@fulltext([email, password])
+  @@map(name: "user")
 }
 
 model Profile {
@@ -75,6 +76,7 @@ model Profile {
   userId      String    @unique
 
   @@fulltext([name, email])
+  @@map(name: "profile")
 }
 
 model Post {
@@ -84,6 +86,7 @@ model Post {
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
   authorId  String
+  @@map(name: "post")
 }
 
 model Location {
@@ -104,6 +107,7 @@ model Location {
 
   @@fulltext([name])
   @@fulltext([name, description])
+  @@map(name: "location")
 }
 
 model MapView {
@@ -117,6 +121,7 @@ model MapView {
   extent       String      @db.LongText
   location     Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
   locationId   Int         @unique
+  @@map(name: "mapview")
 }
 
 model Projection {
@@ -133,6 +138,7 @@ model Projection {
   updatedById String?
 
   @@fulltext([name])
+  @@map(name: "projection")
 }
 
 model MapLayer {
@@ -154,6 +160,7 @@ model MapLayer {
   Feature     Feature[]
 
   @@fulltext([name, description])
+  @@map(name: "maplayer")
 }
 
 model Feature {
@@ -173,4 +180,5 @@ model Feature {
   updatedById String?
   type       FeatureType @default(INTERNAL)
   @@fulltext([name])
+  @@map(name: "feature")
 }
