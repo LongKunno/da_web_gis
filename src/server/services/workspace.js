@@ -96,8 +96,8 @@ module.exports = {
                 })),
                 skipDuplicates: true,
               });
-            } catch {
-
+            } catch (e){
+              console.log(e);
             }
           }
         }

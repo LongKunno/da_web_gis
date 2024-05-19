@@ -1,3 +1,21 @@
+<style>
+.q-header {
+  background-color: #521281;
+}
+
+.q-drawer-container .q-drawer {
+  background-color: #222222;
+}
+
+.q-drawer-container .q-item__label {
+  color: #b5b5b5;
+}
+
+.q-drawer-container .q-icon {
+  color: #9039ff;
+}
+</style>
+
 <template>
   <q-layout view="hHh Lpr lFf">
     <q-header elevated>
@@ -11,7 +29,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> GIS App </q-toolbar-title>
+        <q-toolbar-title> Hệ thống bản đồ cây trồng Đà Nẵng </q-toolbar-title>
         <q-avatar>
           <img v-if="profile?.picture" :src="profile?.picture">
           <img v-else src="~assets/account.jpg">
