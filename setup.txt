@@ -15,13 +15,4 @@ quasar dev
 npm start
 
 # tét# tét 
-nố nồ
-rứa là mất hết code đó @@
-cộng này nè
-để hết đống file lên phần staged changes
-thử lại đi bro
-+ xong răng
-rồi bấm commit a
-nhập tên của commit rồi nhấn commit a
-đúng rrok
-ỳ thử đi
+để thử lại
