@@ -14,5 +14,3 @@ Run:
 quasar dev
 npm start
 
-# tét# tét 
-để thử lại

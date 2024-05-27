@@ -2,18 +2,16 @@ import { api } from "boot/axios";
 import { i18n } from "boot/i18n.js";
 import { Notify, Dialog } from "quasar";
 const $t = i18n.global.t;
-
 export const getFeaturesByLayer = async (query) => {
-  const queryURL = new URLSearchParams();
+  const queryURL = new URLSearchParams();//tạo chuỗi truy vấn
   Object.entries(query).forEach((i) => {
-    queryURL.append(i[0], i[1]);
+    queryURL.append(i[0], i[1]);//chuyển đỏi thành mảng key value
   });
   const response = await api.get(`mapLayers/${query.layerId}/features`, {
     params: queryURL,
   });
   return response.data;
 };
-
 export const getExternalFeaturesByLayer = async (query) => {
   const queryURL = new URLSearchParams();
   Object.entries(query).forEach((i) => {

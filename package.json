@@ -55,7 +55,7 @@
     "node-polyfill-webpack-plugin": "^2.0.1",
     "postcss": "^8.4.14",
     "prettier": "^2.5.1",
-    "prisma": "^4.13.0",
+    "prisma": "^4.16.2",
     "vite": "^2.9.16"
   },
   "engines": {
