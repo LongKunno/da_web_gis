@@ -7,6 +7,7 @@ const userAPI = require('./src/server/user')
 const profileAPI = require('./src/server/profile')
 const mapLayerAPI = require('./src/server/mapLayer')
 const locationAPI = require('./src/server/location')
+const chatGptController = require('./src/server/chatgpt');
 const express = require('express')
 const cors = require('cors')
 
@@ -85,3 +86,7 @@ app.post('/api/workspaces/sync', workspaceAPI.syncWorkspace)
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server started on port ${process.env.PORT || 3000}`)
 })
+
+
+// projection
+app.post('/api/chatbot', chatGptController.askToChatGpt);
