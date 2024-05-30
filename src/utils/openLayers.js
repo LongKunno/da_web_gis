@@ -133,40 +133,40 @@ export const FeatureUtils = {
    * @param layer {VectorLayer}
    * @returns {BaseDataFeature}
    */
-  getDataOfFeature: function (feature, layer) {
-    /**
-     *
-     * @type {BaseDataFeature}
-     */
-    let featureData;
-    switch (layer.get("name")) {
-      case "Đất Đà Nẵng":
-        {
-          switch (feature.get("SoilTypeId")) {
-            case SOIL_TYPE_ID.DAT_DON_VI_O:
-              featureData = new CityLandDataFeature();
-              break;
-            case SOIL_TYPE_ID.RUNG_DAC_DUNG:
-              featureData = new ForestLandDataFeature();
-              break;
-            default:
-              featureData = new CityLandDataFeature();
-          }
-        }
-        break;
-      case "Giao Thông":
-        featureData = new RoadDataFeature();
-        break;
-      case "": {
-        break;
-      }
-      default:
-        featureData = new BaseDataFeature();
-        break;
-    }
-    featureData.setData(feature);
-    return featureData;
-  },
+  // getDataOfFeature: function (feature, layer) {
+  //   /**
+  //    *
+  //    * @type {BaseDataFeature}
+  //    */
+  //   let featureData;
+  //   switch (layer.get("name")) {
+  //     case "Đất Đà Nẵng":
+  //       {
+  //         switch (feature.get("SoilTypeId")) {
+  //           case SOIL_TYPE_ID.DAT_DON_VI_O:
+  //             featureData = new CityLandDataFeature();
+  //             break;
+  //           case SOIL_TYPE_ID.RUNG_DAC_DUNG:
+  //             featureData = new ForestLandDataFeature();
+  //             break;
+  //           default:
+  //             featureData = new CityLandDataFeature();
+  //         }
+  //       }
+  //       break;
+  //     case "Giao Thông":
+  //       featureData = new RoadDataFeature();
+  //       break;
+  //     case "": {
+  //       break;
+  //     }
+  //     default:
+  //       featureData = new BaseDataFeature();
+  //       break;
+  //   }
+  //   featureData.setData(feature);
+  //   return featureData;
+  // },
   /**
    *
    * @param style {}
@@ -187,36 +187,36 @@ export const FeatureUtils = {
    * @param feature {Feature}
    * @param
    */
-  setStyleBySoilType: function (feature) {
-    let soilTypeId = feature.get("SoilTypeId");
-    let color;
-    switch (soilTypeId) {
-      case SOIL_TYPE_ID.RUNG_DAC_DUNG:
-        color = "#00AE46";
-        break;
-      case SOIL_TYPE_ID.DAT_DON_VI_O:
-        color = "#C959D1";
-        break;
-      case SOIL_TYPE_ID.RUNG_PHONG_HO:
-        color = "#71FF6F";
-        break;
-      case SOIL_TYPE_ID.DAT_DU_LICH:
-        color = "#FF5A99";
-        break;
-      case SOIL_TYPE_ID.DAT_DICH_VU:
-        color = "#F3A64B";
-        break;
-      case SOIL_TYPE_ID.DAT_CONG_NGHIEP:
-        color = "#FFFF1D";
-        break;
-      case SOIL_TYPE_ID.RUNG_SAN_XUAT:
-        color = "#85B66F";
-        break;
-      default:
-        color = "WHITE";
-    }
-    return color;
-  },
+  // setStyleBySoilType: function (feature) {
+  //   let soilTypeId = feature.get("SoilTypeId");
+  //   let color;
+  //   switch (soilTypeId) {
+  //     case SOIL_TYPE_ID.RUNG_DAC_DUNG:
+  //       color = "#00AE46";
+  //       break;
+  //     case SOIL_TYPE_ID.DAT_DON_VI_O:
+  //       color = "#C959D1";
+  //       break;
+  //     case SOIL_TYPE_ID.RUNG_PHONG_HO:
+  //       color = "#71FF6F";
+  //       break;
+  //     case SOIL_TYPE_ID.DAT_DU_LICH:
+  //       color = "#FF5A99";
+  //       break;
+  //     case SOIL_TYPE_ID.DAT_DICH_VU:
+  //       color = "#F3A64B";
+  //       break;
+  //     case SOIL_TYPE_ID.DAT_CONG_NGHIEP:
+  //       color = "#FFFF1D";
+  //       break;
+  //     case SOIL_TYPE_ID.RUNG_SAN_XUAT:
+  //       color = "#85B66F";
+  //       break;
+  //     default:
+  //       color = "WHITE";
+  //   }
+  //   return color;
+  // },
 
   // TODO: get other Properties of the feature here
 };

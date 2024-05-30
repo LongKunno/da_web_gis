@@ -50,13 +50,11 @@ export const addXML = ({feature, workspace, layer, resolve = () => {}}) => {
     `<feature:${layer} xmlns:feature="${workspace}">\n` +
     xmlGeometry +
     xmlProperties +
-    // "<${workspace}:tendat>" +
-    // "nguyen" +
-    // "</${workspace}:tendat>\n" +
     `</feature:${layer}>\n` +
     "</wfs:Insert>\n" +
     "</wfs:Transaction>\n";
   const insertRequestUrl = `${process.env.GEO_SERVER_URL}/${workspace}/wfs`;
+  console.log("test1.3")
   fetch(insertRequestUrl, {
     method: "POST",
     body: transactionXML,
@@ -109,6 +107,7 @@ export const deleteXML = ({feature, workspace, layer, resolve = () => {}}) => {
     },
   })
     .then(function (response) {
+      console.log("test3")
       if (response.status !== 200 || response.status === 400) {
         Notify.create({
           message:  $t("Cannot delete feature!"),
@@ -125,6 +124,7 @@ export const deleteXML = ({feature, workspace, layer, resolve = () => {}}) => {
       return response.text();
     })
     .then(function (responseText) {
+      console.log("test2")
       // Handle the response
     });
 };
@@ -143,18 +143,17 @@ export const updateXML = ({feature, workspace='danang', layer='bien_utm', resolv
     '<wfs:Transaction xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd">\n' +
     `<wfs:Update typeName="feature:${layer}" xmlns:feature="${workspace}">\n` +
     xmlProperties +
-    // '<wfs:Property>\n' +
-    // '<wfs:ValueReference>OBJECTID</wfs:ValueReference>' +
-    // '<wfs:Value>1</wfs:Value>' +
-    // '</wfs:Property>\n' +
     '<fes:Filter>\n' +
     `<fes:ResourceId rid="${rid}" />\n` +
     '</fes:Filter>\n' +
     '</wfs:Update>\n' +
     '</wfs:Transaction>\n';
+  
+  // Update tree
   const insertRequestUrl = `${process.env.GEO_SERVER_URL}/${workspace}/wfs`;
   fetch(insertRequestUrl, {
-    method: "POST",
+    mode:'cors',
+    method: "POST", 
     body: transactionXML,
     headers: {
       "Content-Type": "text/xml",
@@ -162,6 +161,7 @@ export const updateXML = ({feature, workspace='danang', layer='bien_utm', resolv
     },
   })
     .then(function (response) {
+      console.log("Success!")
       if (response.status !== 200 || response.status === 400) {
         Notify.create({
           message:  $t("Cannot update feature!"),
@@ -178,6 +178,9 @@ export const updateXML = ({feature, workspace='danang', layer='bien_utm', resolv
       return response.text();
     })
     .then(function (responseText) {
+      console.log("Failed!")
+      console.log(responseText);
       // Handle the response
     });
 };
+// 

@@ -10,6 +10,11 @@ const routes = [
         name: 'HomePage',
       },
       {
+        path: '/add-tree', // Đường dẫn mới cho trang AddTree
+        component: () => import('pages/AddTree.vue'), // Import component AddTree
+        name: 'AddTree', // Đặt tên cho định tuyến
+      },
+      {
         path: 'user-management',
         component: () => import('pages/UserManagementPage.vue'),
         meta: {
@@ -32,6 +37,7 @@ const routes = [
       },
       { path: 'profile', component: () => import('pages/ProfilePage/index.vue') },
       // { path: 'logout', component: () => import('pages/LogoutPage.vue') },
+      
     ]
   },
   {
@@ -53,7 +59,8 @@ const routes = [
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
-  }
+  },
+
 ]
 
 export default routes

@@ -25,17 +25,8 @@
     </template>
 
     <template v-slot:two>
-      <q-icon name="img:icons/area.png" />
-      <q-tooltip>{{ $t("Area") }}</q-tooltip>
-      <q-badge
-        v-if="polygonCount > 0"
-        color="yellow"
-        text-color="white"
-        floating
-        dense
-      >
-        {{ polygonCount }}
-      </q-badge>
+      <q-icon name="img:icons/add.png" />
+      <q-tooltip>{{ $t("Add") }}</q-tooltip>
     </template>
 
     <template v-slot:three>
@@ -343,7 +334,7 @@ export default defineComponent({
           icon:
             geometryType instanceof LineString
               ? "straighten"
-              : "img:icons/area.png",
+              : "img:icons/add.png",
           time,
           id: time,
           position: evt.feature.getGeometry().getExtent(),

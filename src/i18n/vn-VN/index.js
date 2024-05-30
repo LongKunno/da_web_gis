@@ -35,7 +35,7 @@ export default {
   "Zoom out": "Phóng nhỏ",
   Map: "Bản đồ",
   Distance: "Khoảng cách",
-  Area: "Diện tích",
+  Add: "Thêm mới",
   "Current location": "Vị trí hiện tại",
   Help: "Trợ giúp",
   // Float control
