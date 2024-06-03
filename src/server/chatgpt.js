@@ -31,14 +31,15 @@ const askToChatGpt = async function (req, res) {
 
         console.log('Bot: ' + completionText);
         res.send({ from: "chatGpt", data: completionText });
+
+        // Update history with user input and assistant response
+        chatHistory.push(['user', req.body.message]);
+        chatHistory.push(['assistant', completionText]);
       } catch (error) {
         console.error('Error creating chat completion:', error);
         res.send({ from: "chatGpt", data: "Lỗi xảy ra trong quá trình xử lý!" });
       }
 
-      // Update history with user input and assistant response
-      chatHistory.push(['user', req.body.message]);
-      chatHistory.push(['assistant', completionText]);
     } catch (error) {
       console.error(error);
       res.send({ from: "chatGpt", data: "Lỗi xảy ra trong quá trình xử lý!" });

@@ -1,21 +1,3 @@
-<style>
-.q-header {
-  background-color: #521281;
-}
-
-.q-drawer-container .q-drawer {
-  background-color: #222222;
-}
-
-.q-drawer-container .q-item__label {
-  color: #b5b5b5;
-}
-
-.q-drawer-container .q-icon {
-  color: #9039ff;
-}
-</style>
-
 <template>
   <q-layout view="hHh Lpr lFf">
     <q-header elevated>

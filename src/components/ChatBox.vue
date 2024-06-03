@@ -1,32 +1,34 @@
 
 <template>
-    <div class="chatbox-container">
-<div class="container">
-  <h1>Ai Chat Bot</h1>
-<div class="messageBox mt-8">
-  <template v-for="(message, index) in messages" :key="index">
-    <div :class="message.from == 'user' ? 'messageFromUser' : 'messageFromChatGpt'">
-      <div :class="message.from == 'user' ? 'userMessageWrapper' : 'chatGptMessageWrapper'">
-        <div :class="message.from == 'user' ? 'userMessageContent' : 'chatGptMessageContent'">{{ message.data }}</div>
+<div class="chatbox-container">
+<div class="container" id="chatbox-gpt-ai-container">
+  <h6 @click="hideChatAI"><i class="far fa-comments"></i> Chat Bot AI</h6>
+  <div class="messageBox mt-8">
+    <template v-for="(message, index) in messages" :key="index">
+      <div :class="message.from == 'user' ? 'messageFromUser' : 'messageFromChatGpt'">
+        <div :class="message.from == 'user' ? 'userMessageWrapper' : 'chatGptMessageWrapper'">
+          <div :class="message.from == 'user' ? 'userMessageContent' : 'chatGptMessageContent'">{{ message.data }}</div>
+        </div>
       </div>
-    </div>
-  </template>
+    </template>
+  </div>
+  <div class="inputContainer">
+    <input
+      v-model="currentMessage"
+      type="text"
+      class="messageInput"
+      placeholder="Ask me anything..."
+      @keydown.enter="sendMessage(currentMessage)"
+    />
+    <button
+      @click="sendMessage(currentMessage)"
+      class="askButton"
+    >
+      Ask
+    </button>
+  </div>
 </div>
-<div class="inputContainer">
-  <input
-    v-model="currentMessage"
-    type="text"
-    class="messageInput"
-    placeholder="Ask me anything..."
-  />
-  <button
-    @click="sendMessage(currentMessage)"
-    class="askButton"
-  >
-    Ask
-  </button>
-</div>
-</div>
+<i id="icon-when-hide-chatbox" @click="showChatAI" class="far fa-comments" style="font-size:30px; display:none;"></i>
 </div>
 </template>
 
@@ -55,6 +57,7 @@ export default {
         from: 'user',
         data: message,
       });
+      this.currentMessage = '';
       await axios
         .post('http://localhost:3000/api/chatbot', {
           message: message,
@@ -70,7 +73,16 @@ export default {
             console.log(response.data.data)
           }
       });
+    },
 
+    hideChatAI() { 
+      document.getElementById("chatbox-gpt-ai-container").style.display = "none";
+      document.getElementById("icon-when-hide-chatbox").style.display = "";
+    },
+
+    showChatAI() { 
+      document.getElementById("icon-when-hide-chatbox").style.display = "none";
+      document.getElementById("chatbox-gpt-ai-container").style.display = "";
     },
   },
 };
@@ -88,7 +100,7 @@ export default {
 
 .container {
   width: 360px;
-  height: 600px;
+  height: 530px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -98,7 +110,7 @@ export default {
   font-family: 'Roboto', sans-serif;
 }
 
-h1 {
+h6 {
   font-size: 24px;
   font-weight: 500;
   text-align: center;
