@@ -19,6 +19,9 @@
     <q-btn ref="popupCloser" class="ol-popup-closer" flat round icon="close" @click="actionClosePopup"></q-btn>
     <div ref="popupContent"></div>
   </div>
+  <div class="container mx-auto">
+    <ChatBox />
+  </div>
 </template>
 
 <script>
@@ -68,6 +71,7 @@ import FloatSearch from "src/components/floatSearch/index.vue";
 import FloatDetail from "src/components/floatDetail/index.vue";
 import FloatControl from "src/components/floatControl/index.vue";
 import FloatZoom from "src/components/floatZoom.vue";
+import ChatBox from 'src/components/ChatBox.vue';
 import { FeatureUtils, distanceBetweenPoints } from "src/utils/openLayers";
 import { getFeature } from "src/api/feature";
 import { captureScreenshot } from "src/utils/html2Canvas";
@@ -80,6 +84,7 @@ export default defineComponent({
     FloatDetail,
     FloatControl,
     FloatZoom,
+    ChatBox,
   },
   props: {},
   setup(props) {
