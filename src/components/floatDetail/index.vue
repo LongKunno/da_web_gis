@@ -43,7 +43,7 @@
         <div v-show="tabExpanded">
           <q-tab-panels v-model="detailTab" animated :keep-alive="true" class="shadow-10 rounded-borders">
             <q-tab-panel name="tab-fields" class="panelClass">
-                <detail-table :type="typeComputed" :id="id" :feature_type="feature_type" :content="content" @update:model-content="updateContent($event)" ></detail-table>
+                <detail-table :type="typeComputed" :id="id" :feature_type="feature_type" :content="content" @update:model-content="updateContent($event)" editting></detail-table>
             </q-tab-panel>
           </q-tab-panels>
         </div>
@@ -149,6 +149,7 @@ export default defineComponent({
             const feature = mapStore.getSelectedFeature.feature
             const layer = mapStore.getSelectedFeature.layer.get("id").replace(`${unref(workspace)}:`, '')
             feature.setProperties(_tempContent)
+            console.log('update content', _tempContent);
             updateXML({ workspace: unref(workspace), layer, feature })
             // const response = await updateFeature({
             //   id: props.id,

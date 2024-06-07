@@ -2,6 +2,8 @@ import _isFunction from "lodash/isFunction";
 import _isArray from "lodash/isArray";
 import GML from "ol/format/GML";
 import { Buffer } from "buffer";
+import { Point, LineString, Polygon } from 'ol/geom';
+import { Feature } from 'ol';
 
 import { i18n } from "boot/i18n.js";
 import {
@@ -31,7 +33,6 @@ export const addXML = ({feature, workspace, layer, resolve = () => {}}) => {
       `</${workspace}:${item[0]}>`;
     return acc;
   }, "");
-
   const geometryNode = new XMLSerializer().serializeToString(
     gml.writeGeometryNode(feature.getGeometry())
   );
@@ -54,8 +55,8 @@ export const addXML = ({feature, workspace, layer, resolve = () => {}}) => {
     "</wfs:Insert>\n" +
     "</wfs:Transaction>\n";
   const insertRequestUrl = `${process.env.GEO_SERVER_URL}/${workspace}/wfs`;
-  console.log("test1.3")
   fetch(insertRequestUrl, {
+    mode:'cors',
     method: "POST",
     body: transactionXML,
     headers: {
@@ -85,6 +86,7 @@ export const addXML = ({feature, workspace, layer, resolve = () => {}}) => {
     });
 };
 
+
 export const deleteXML = ({feature, workspace, layer, resolve = () => {}}) => {
   const rid = feature?.getId?.() || null
   const transactionXML =
@@ -99,6 +101,7 @@ export const deleteXML = ({feature, workspace, layer, resolve = () => {}}) => {
     "</wfs:Transaction>";
   const insertRequestUrl = `${process.env.GEO_SERVER_URL}/${workspace}/wfs`;
   fetch(insertRequestUrl, {
+    mode:'cors',
     method: "POST",
     body: transactionXML,
     headers: {
@@ -129,7 +132,7 @@ export const deleteXML = ({feature, workspace, layer, resolve = () => {}}) => {
     });
 };
 
-export const updateXML = ({feature, workspace='danang', layer='bien_utm', resolve = () => {}}) => {
+export const updateXML = ({feature, workspace='danang', layer, resolve = () => {}}) => {
   const rid = feature?.getId?.() || null
   const a = feature.getProperties()
   delete a.geometry
@@ -161,7 +164,6 @@ export const updateXML = ({feature, workspace='danang', layer='bien_utm', resolv
     },
   })
     .then(function (response) {
-      console.log("Success!")
       if (response.status !== 200 || response.status === 400) {
         Notify.create({
           message:  $t("Cannot update feature!"),
@@ -179,7 +181,6 @@ export const updateXML = ({feature, workspace='danang', layer='bien_utm', resolv
     })
     .then(function (responseText) {
       console.log("Failed!")
-      console.log(responseText);
       // Handle the response
     });
 };

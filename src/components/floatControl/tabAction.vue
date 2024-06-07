@@ -12,7 +12,7 @@
     @update:model-value="selectControl"
     @clear="clearControl"
   >
-    <template v-slot:one>
+    <!-- <template v-slot:one>
       <q-badge
         v-if="lineStringCount > 0"
         color="yellow"
@@ -22,19 +22,19 @@
         {{ lineStringCount }}
       </q-badge>
       <q-tooltip>{{ $t("Distance") }}</q-tooltip>
-    </template>
+    </template> -->
 
     <template v-slot:two>
-      <q-icon name="img:icons/add.png" />
+      <q-icon name="img:icons/add.png"/>
       <q-tooltip>{{ $t("Add") }}</q-tooltip>
     </template>
 
-    <template v-slot:three>
+    <!-- <template v-slot:three>
       <q-tooltip>{{ $t("Current location") }}</q-tooltip>
-    </template>
+    </template> -->
   </q-btn-toggle>
   <q-separator />
-  <q-list overlay v-if="drawList.length > 0">
+   <q-list overlay v-if="drawList.length > 0">
     <q-scroll-area
       class="drawListClass"
       :style="`height: ${drawList.length * 51}px;`"
@@ -70,19 +70,19 @@
             >
               <q-menu>
                 <q-list dense>
-                  <q-item clickable v-close-popup @click="detailDraw(index)">
+                   <q-item clickable v-close-popup @click="detailDraw(index)">
                     <q-item-section>{{ $t("Detail") }}</q-item-section>
                     <q-item-section avatar>
                       <q-icon name="info" />
                     </q-item-section>
-                  </q-item>
-                  <q-item clickable v-close-popup @click="downloadDraw(index)">
+                  </q-item> 
+                   <q-item clickable v-close-popup @click="downloadDraw(index)">
                     <q-item-section>{{ $t("Download") }}</q-item-section>
                     <q-item-section avatar>
                       <q-icon name="download" />
                     </q-item-section>
-                  </q-item>
-                  <q-item
+                  </q-item> 
+                   <q-item
                     clickable
                     v-close-popup
                     @click.stop="deleteDraw(index)"
@@ -91,7 +91,7 @@
                     <q-item-section avatar>
                       <q-icon name="delete" />
                     </q-item-section>
-                  </q-item>
+                  </q-item> 
                 </q-list>
               </q-menu>
             </q-btn>
@@ -108,7 +108,7 @@
       icon="delete"
       style="float: right"
       @click="deleteDraw()"
-    />
+    /> 
   </q-list>
 </template>
 
@@ -169,9 +169,9 @@ export default defineComponent({
 
     const buttonModel = ref();
     const options = [
-      { icon: "straighten", value: "LineString", slot: "one" },
-      { value: "Polygon", slot: "two" },
-      { icon: "place", value: "place", slot: "three" },
+      // { icon: "straighten", value: "LineString", slot: "one" },
+      { value: "Point", slot: "two" },
+      // { icon: "place", value: "place", slot: "three" },
     ];
     // geolocation
     const geoLocation = ref(null);
@@ -241,7 +241,7 @@ export default defineComponent({
         unref(geoLocation).removeCurrentLocation();
         return;
       }
-      if (val !== "place") {
+      if (val == "Point") {
         $bus.emit("close-popup", true);
         clearControl();
         addInteraction(val);
@@ -297,67 +297,58 @@ export default defineComponent({
         type,
         style: drawStyle(),
       });
-      drawStart.value = unref(draw).on("drawstart", function (evt) {
-        // set sketch
-        sketch.value = evt.feature;
-        let tooltipCoord = evt.coordinate;
-        listener.value = unref(sketch)
-          .getGeometry()
-          .on("change", function (evt) {
-            const geom = evt.target;
-            let output;
-            let type;
-            if (geom instanceof Polygon) {
-              type = "Polygon";
-              output = formatArea(geom);
-              tooltipCoord = geom.getInteriorPoint().getCoordinates();
-            } else if (geom instanceof LineString) {
-              output = formatLength(geom);
-              type = "LineString";
-              tooltipCoord = geom.getLastCoordinate();
-            }
-            measureTooltipElement.value.innerHTML = output;
-            unref(measureTooltip).setPosition(tooltipCoord);
+      if (type === "Point") {
+        unref(map).on("singleclick", async function (evt) {
+          const coordinate = evt.coordinate;
+          const pixel = evt.map.getCoordinateFromPixel(coordinate);
+          const feature = vector.value
+            .getSource()
+            .getClosestFeatureToCoordinate(pixel);
+
+          if (!feature) return;
+
+          mapStore.setSelectedFeature({
+            feature: feature,
+            layer: null,
           });
-      });
-      drawEnd.value = unref(draw).on("drawend", function (evt) {
-        const time = new Date().toLocaleString();
-        evt.feature.setId(time);
-        const currentDocument = document.querySelectorAll(
-          "div.ol-tooltip-static"
-        );
-        measureTooltipElement.value.className = `ol-tooltip ol-tooltip-static ${currentDocument.length}`;
-        const geometryType = unref(sketch).getGeometry();
-        drawList.value[unref(drawList).length] = {
-          text: measureTooltipElement.value.innerHTML,
-          type: geometryType instanceof LineString ? "LineString" : "Polygon",
-          icon:
-            geometryType instanceof LineString
-              ? "straighten"
-              : "img:icons/add.png",
-          time,
-          id: time,
-          position: evt.feature.getGeometry().getExtent(),
-        };
-        unref(measureTooltip).setOffset([0, -7]);
-        // unset sketch
-        sketch.value = null;
-        // unset tooltip so that a new one can be created
-        measureTooltipElement.value = null;
-        createMeasureTooltip();
-        unByKey(unref(listener));
-      });
+          // const geoJsonData = await writeGeoJSON({
+          //   feature,
+          //   map: unref(map),
+          // });
+            const geoJsonData = {
+                "ten_cay": "",
+                "dia_chi": "",
+                "dac_diem": "",
+                "benh": "",
+             }
+            
+          const coordinateHDMS = toStringHDMS(
+            transform(
+              feature.getGeometry().getCoordinates(),
+              unref(map).getView().getProjection().getCode(),
+              "EPSG:4326"
+            )
+          );
+
+          captureScreenshot().then((response) => {
+            $bus.emit("on-show-detail", {
+              title: feature.get("name"),
+              type: LAYER_TYPE[1],
+              content: geoJsonData,  
+              image: response,
+              coordinate: coordinateHDMS,
+            });
+          console.log(geoJsonData);
+          });
+        //  $bus.emit("on-show-detail", { content: geoJsonData });
+        });
+      }
 
       unref(map).addInteraction(unref(draw));
       createMeasureTooltip();
-      createHelpTooltip();
-      movePointer.value = unref(map).on("pointermove", pointerMoveHandler);
-      unref(map)
-        .getViewport()
-        .addEventListener("mouseout", function () {
-          unref(helpTooltipElement).classList.add("hidden");
-        });
+      createHelpTooltip();    
     };
+
     const zoomToDraw = (
       position,
       duration = 1000,
@@ -367,6 +358,7 @@ export default defineComponent({
         padding,
         duration,
       });
+
     };
     const deleteDraw = (index = -1) => {
       if (index !== -1) {
@@ -386,7 +378,8 @@ export default defineComponent({
         drawList.value = [];
       }
     };
-    $bus.on("on-delete-draw", deleteDraw);
+    $bus.on("on-delete-draw", deleteDraw); 
+
     const detailDraw = async (index = -1) => {
       if (index !== -1) {
         const feature = unref(source).getFeatureById(unref(drawList)[index].id);
@@ -418,7 +411,7 @@ export default defineComponent({
                 coordinate: coordinate,
               });
             });
-            $bus.emit("on-show-detail", { content: geoJsonData });
+          //  $bus.emit("on-show-detail", { content: geoJsonData });
           }, 500);
         }
       }
@@ -498,6 +491,7 @@ export default defineComponent({
     onUnmounted(() => {
       $bus.off("on-delete-draw");
     })
+    
     return {
       vm,
       map,

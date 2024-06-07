@@ -123,6 +123,7 @@ import { getFeaturesByLayer } from "src/api/feature";
 import { createFeature, updateFeature } from "src/api/feature";
 import { SCROLL_STYLE } from "src/constants/virtual-scroll.js";
 import { addXML } from "src/utils/transactionXML";
+import { create } from "ol/transform";
 
 export default defineComponent({
   name: "detailPopupSave",
@@ -278,19 +279,26 @@ export default defineComponent({
     // table
     const onSave = async () => {
       // const feature = {
-      //   properties: JSON.stringify(props.content || null),
-      // };
+      //    properties: JSON.stringify(props.content || null),
+      //  };
       const feature = mapStore.getSelectedFeature.feature
+      feature.setProperties({
+        ...feature.getProperties(),
+        ...props.content,
+        created_at: new Date().toISOString(),
+        toado_x : feature.getGeometry().getCoordinates()[0],
+        toado_y : feature.getGeometry().getCoordinates()[1],
+      });
       const workspace = unref(LocationOptions).find((e) => e.name === unref(locationSearch)).workspace
       const layerName = unref(layerRadio).url.replace(`${workspace}:`,'')
       const resolve = () => {
         layer?.getSource().updateParams()
       }
-      await addXML({ feature, workspace, layer: layerName, resolve })
-      // const response = await createFeature({
-      //   features: [feature],
-      //   layerId: unref(layerRadio).id,
-      // });
+      await addXML({ feature, workspace, layer: layerName})
+      //  const response = await createFeature({
+      //    features: [feature],
+      //    layerId: unref(layerRadio).id,
+      //  });
     };
     return {
       vm,

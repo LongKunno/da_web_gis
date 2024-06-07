@@ -78,6 +78,7 @@ export default defineComponent({
     content: Object,
     type: String,
     feature_type: String,
+    editting: Boolean,
   },
   components: {
     "detail-popup-save": detailPopupSave,
@@ -93,7 +94,7 @@ export default defineComponent({
     const layer = computed(() => mapStore.getSelectedFeature.layer);
     const { role } = userStore.getUser;
 
-    const isEditting = ref(false);
+    const isEditting = ref(props.editting ||false);
     const ableToSave = computed(
       () => unref(isEditting) && props.type !== LAYER_TYPE[0]
     );
@@ -202,6 +203,7 @@ export default defineComponent({
     watch(
       () => unref(props.content),
       (newVal, oldVal) => {
+        
         if (!_isEqual(newVal, oldVal)) {
           rows.value = Object.entries(props.content).map((i) => {
             let type = "string";
@@ -268,10 +270,10 @@ body {
 }
 
 .tableClass {
-  // width: 390px;
-  // max-width: 390px;
-  // width: 98%;
-  // max-width: 98%;
+   width: 390px;
+   max-width: 390px;
+   width: 98%;
+   max-width: 98%;
 }
 
 .captionClass {

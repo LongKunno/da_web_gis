@@ -418,6 +418,7 @@ export const actionAddLayerWMS = ({ layer, workspace, map }) => {
   });
   unref(map).addLayer(imageLayer);
   return imageLayer
+ 
 };
 
 export const writeGeoJSON = (option) => {
