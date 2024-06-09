@@ -11,7 +11,7 @@
     </q-page-sticky>
     <q-page-sticky class="stickyClass" position="bottom" :offset="[10, 10]">
       <div v-html="imageHTML" />
-    </q-page-sticky>
+    </q-page-sticky>  
     <FloatDetail v-if="showDetail" data-html2canvas-ignore v-model="showDetail" v-bind="floatDetailProps"
       @update:model-content="floatDetailProps.content = $event" />
   </div>
@@ -142,6 +142,7 @@ export default defineComponent({
             floatDetailProps.value.title = _title;
           }
         }
+      
       }
       if (coordinate) {
         floatDetailProps.value.coordinate = coordinate;
@@ -153,7 +154,7 @@ export default defineComponent({
         floatDetailProps.value.feature_type = feature_type;
       }
     };
-    $bus.on("on-show-detail", onShowDetail);
+     $bus.on("on-show-detail", onShowDetail);
     // popup
     const popupRef = ref(null);
     const popupContent = ref(null);
@@ -222,6 +223,14 @@ export default defineComponent({
       delete properties.geometry
       floatDetailProps.value.id = feature.getId();
       floatDetailProps.value.title = feature.getId();
+      const coordinateHDMS = toStringHDMS(
+            transform(
+              feature.getGeometry().getCoordinates(),
+              unref(map).getView().getProjection().getCode(),
+              "EPSG:4326"
+            )
+          );
+      floatDetailProps.value.coordinate = coordinateHDMS
        onShowDetail({
         content: properties || {},
       });
@@ -313,6 +322,7 @@ export default defineComponent({
               const isHighLight = highLightFeature(f, layer);
               layer.changed();
               if (isHighLight) {
+                console.log(isHighLight)
                 extend(_extent, f.getGeometry().getExtent());
                 unref(map)
                   .getView()
@@ -384,6 +394,7 @@ export default defineComponent({
                         padding: [100, 100, 100, 100],
                       }
                     )
+                    
                     if (features[0].getId?.()) getFeatureAPI(features[0]);
                     setTimeout(() => {
                       captureScreenshot().then((response) => {

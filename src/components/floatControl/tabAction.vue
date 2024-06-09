@@ -25,16 +25,16 @@
     </template> -->
 
     <template v-slot:two>
-      <q-icon name="img:icons/add.png"/>
+      <q-icon name="img:icons/add.png" />
       <q-tooltip>{{ $t("Add") }}</q-tooltip>
     </template>
 
-    <!-- <template v-slot:three>
-      <q-tooltip>{{ $t("Current location") }}</q-tooltip>
-    </template> -->
+    <template v-slot:three>
+      <q-tooltip>moving </q-tooltip>
+    </template>
   </q-btn-toggle>
   <q-separator />
-   <q-list overlay v-if="drawList.length > 0">
+  <q-list overlay v-if="drawList.length > 0">
     <q-scroll-area
       class="drawListClass"
       :style="`height: ${drawList.length * 51}px;`"
@@ -70,19 +70,13 @@
             >
               <q-menu>
                 <q-list dense>
-                   <q-item clickable v-close-popup @click="detailDraw(index)">
+                  <q-item clickable v-close-popup @click="detailDraw(index)">
                     <q-item-section>{{ $t("Detail") }}</q-item-section>
                     <q-item-section avatar>
                       <q-icon name="info" />
                     </q-item-section>
-                  </q-item> 
-                   <q-item clickable v-close-popup @click="downloadDraw(index)">
-                    <q-item-section>{{ $t("Download") }}</q-item-section>
-                    <q-item-section avatar>
-                      <q-icon name="download" />
-                    </q-item-section>
-                  </q-item> 
-                   <q-item
+                  </q-item>
+                  <q-item
                     clickable
                     v-close-popup
                     @click.stop="deleteDraw(index)"
@@ -91,7 +85,7 @@
                     <q-item-section avatar>
                       <q-icon name="delete" />
                     </q-item-section>
-                  </q-item> 
+                  </q-item>
                 </q-list>
               </q-menu>
             </q-btn>
@@ -108,7 +102,7 @@
       icon="delete"
       style="float: right"
       @click="deleteDraw()"
-    /> 
+    />
   </q-list>
 </template>
 
@@ -132,7 +126,7 @@ import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import Overlay from "ol/Overlay";
 import { LineString, Polygon } from "ol/geom";
-import { Draw } from "ol/interaction";
+import { Draw, Modify, Select } from "ol/interaction";
 import { unByKey } from "ol/Observable";
 import GeoJSON from "ol/format/GeoJSON";
 import { toStringHDMS } from "ol/coordinate";
@@ -140,9 +134,10 @@ import { transform } from "ol/proj";
 import GeoLocationController from "src/utils/geoLocationController";
 import { writeGeoJSON } from "src/utils/openLayers";
 import { captureScreenshot } from "src/utils/html2Canvas";
-import { drawStyle, formatArea, formatLength } from "src/utils/measure";
+import { formatArea, formatLength } from "src/utils/measure";
 import { LAYER_TYPE } from "src/constants/enum";
 import { useMapStore } from "stores/map";
+import { Circle, Icon, Stroke, Style } from "ol/style";
 
 export default defineComponent({
   name: "TabAction",
@@ -159,19 +154,34 @@ export default defineComponent({
     const $q = useQuasar();
     const $t = i18n.global.t;
     const map = inject("map", {});
-    const mapStore = useMapStore(); 
-    const continueLineMsg = computed(() =>
-      $t("Click to continue drawing the line")
-    );
-    const continuePolygonMsg = computed(() =>
-      $t("Click to continue drawing the polygon")
-    );
+    const mapStore = useMapStore();
+
+    const treeDrawStyle = new Style({
+      image: new Icon({
+        anchor: [0.5, 0.5],
+        anchorXUnits: "fraction",
+        anchorYUnits: "fraction",
+        src: "src/assets/tree.svg",
+        scale: 1.3,
+      }),
+    });
+
+    const borderDashStyle = new Style({
+      image: new Circle({
+        radius: 14,
+        stroke: new Stroke({
+          color: "rgba(51,102,255, 0.7)",
+          width: 2,
+          lineDash: [4, 4],
+        }),
+      }),
+    });
 
     const buttonModel = ref();
     const options = [
       // { icon: "straighten", value: "LineString", slot: "one" },
       { value: "Point", slot: "two" },
-      // { icon: "place", value: "place", slot: "three" },
+      { icon: "place", value: "Modify", slot: "three" },
     ];
     // geolocation
     const geoLocation = ref(null);
@@ -190,18 +200,13 @@ export default defineComponent({
     const vector = ref(
       new VectorLayer({
         source: unref(source),
-        style: {
-          "fill-color": "rgba(255, 255, 255, 0.4)",
-          "stroke-color": "#ffcc33",
-          "stroke-width": 2,
-          "circle-radius": 7,
-          "circle-fill-color": "#ffcc33",
-        },
-        zIndex: 10,
+        style: treeDrawStyle,
       })
     );
     const sketch = ref(null);
     const draw = ref(null);
+    const modify = ref(null);
+    const select = ref(null);
     const snap = ref(null);
     const drawList = ref([]);
     const lineStringCount = computed(
@@ -212,28 +217,7 @@ export default defineComponent({
     );
     // draw type
 
-    // draw event
-    const drawStart = ref(null);
-    const drawEnd = ref(null);
     const movePointer = ref(null);
-    // draw event
-    const pointerMoveHandler = function (evt) {
-      if (evt.dragging) {
-        return;
-      }
-      let helpMsg = $t("Click to start drawing");
-      if (unref(sketch)) {
-        const geom = unref(sketch).getGeometry();
-        if (geom instanceof Polygon) {
-          helpMsg = unref(continuePolygonMsg);
-        } else if (geom instanceof LineString) {
-          helpMsg = unref(continueLineMsg);
-        }
-      }
-      helpTooltipElement.value.innerHTML = helpMsg;
-      unref(helpTooltip).setPosition(evt.coordinate);
-      unref(helpTooltipElement).classList.remove("hidden");
-    };
 
     const selectControl = (val) => {
       if (!val) {
@@ -241,10 +225,12 @@ export default defineComponent({
         unref(geoLocation).removeCurrentLocation();
         return;
       }
-      if (val == "Point") {
+      if (val === "Modify") {
+        handleModify();
+      } else if (val !== "place") {
         $bus.emit("close-popup", true);
         clearControl();
-        addInteraction(val);
+        handleInteraction(val);
         unref(geoLocation).removeCurrentLocation();
       } else {
         $bus.emit("close-popup", true);
@@ -254,8 +240,8 @@ export default defineComponent({
     };
     const updateGeolocation = () => {
       unref(geoLocation).updateGeolocation();
-    }
-    $bus.on("on-update-geolocation", updateGeolocation)
+    };
+    $bus.on("on-update-geolocation", updateGeolocation);
     const clearControl = () => {
       // unbind event movePointer
       unByKey(unref(movePointer));
@@ -271,35 +257,67 @@ export default defineComponent({
         );
       }
     };
-    const addInteraction = (type) => {
-      if (unref(draw)) {
-        unref(map).addInteraction(unref(draw));
-        return;
-      }
-      if (!unref(vector)) {
-        vector.value = new VectorLayer({
-          source: unref(source),
-          style: {
-            "fill-color": "rgba(255, 255, 255, 0.4)",
-            "stroke-color": "#ffcc33",
-            "stroke-width": 2,
-            "circle-radius": 7,
-            "circle-fill-color": "#ffcc33",
-          },
-          zIndex: 10,
+
+    const handleModify = () => {
+      draw.value?.setActive(false);
+
+      select.value = new Select({
+        style: () => {
+          return [borderDashStyle, treeDrawStyle];
+        },
+      });
+      unref(map).addInteraction(select.value);
+
+      modify.value = new Modify({
+        features: select.value.getFeatures(),
+        style: treeDrawStyle,
+      });
+      unref(map).addInteraction(modify.value);
+      const selectedFeatures = select.value.getFeatures();
+
+      select.value.setActive(true);
+      modify.value.setActive(true);
+
+      select.value.on("change:active", function () {
+        selectedFeatures.forEach(function (each) {
+          selectedFeatures.remove(each);
         });
-      }
+      });
+
+      modify.value.on("modifyend", function (evt) {
+        evt.features.forEach((feature) => {
+          const coordinate = toStringHDMS(
+            transform(
+              feature.getGeometry().getCoordinates(),
+              unref(map).getView().getProjection().getCode(),
+              "EPSG:4326"
+            )
+          );
+          $bus.emit("on-show-detail", {
+            coordinate,
+          });
+        });
+      });
+    };
+
+    const handleInteraction = (type) => {
       if (!unref(map).getLayers().getArray().includes(unref(vector))) {
         unref(map).addLayer(unref(vector));
       }
+
       draw.value = new Draw({
         source: unref(source),
-        type,
-        style: drawStyle(),
+        type, // Point,
       });
+
+      modify.value?.setActive(false);
+      select.value?.setActive(false);
+      draw.value.setActive(true);
+
       if (type === "Point") {
         unref(map).on("singleclick", async function (evt) {
           const coordinate = evt.coordinate;
+          console.log("1", coordinate);
           const pixel = evt.map.getCoordinateFromPixel(coordinate);
           const feature = vector.value
             .getSource()
@@ -308,45 +326,39 @@ export default defineComponent({
           if (!feature) return;
 
           mapStore.setSelectedFeature({
-            feature: feature,
+            feature,
             layer: null,
           });
-          // const geoJsonData = await writeGeoJSON({
-          //   feature,
-          //   map: unref(map),
-          // });
-            const geoJsonData = {
-                "ten_cay": "",
-                "dia_chi": "",
-                "dac_diem": "",
-                "benh": "",
-             }
-            
+
+          const geoJsonData = {
+            ten_cay: "",
+            dia_chi: "",
+            dac_diem: "",
+            benh: "",
+          };
+          
           const coordinateHDMS = toStringHDMS(
             transform(
-              feature.getGeometry().getCoordinates(),
+              coordinate,
               unref(map).getView().getProjection().getCode(),
               "EPSG:4326"
             )
           );
-
-          captureScreenshot().then((response) => {
-            $bus.emit("on-show-detail", {
-              title: feature.get("name"),
-              type: LAYER_TYPE[1],
-              content: geoJsonData,  
-              image: response,
-              coordinate: coordinateHDMS,
-            });
-          console.log(geoJsonData);
+          //add
+          $bus.emit("on-show-detail", {
+            title: feature.get("name"),
+            type: LAYER_TYPE[1],
+            content: geoJsonData,
+            image: "https://cdn.quasar.dev/img/chicken-salad.jpg",
+            coordinate: coordinateHDMS,
           });
-        //  $bus.emit("on-show-detail", { content: geoJsonData });
+          // $bus.emit("on-show-detail", { content: geoJsonData });
         });
       }
 
       unref(map).addInteraction(unref(draw));
       createMeasureTooltip();
-      createHelpTooltip();    
+      createHelpTooltip();
     };
 
     const zoomToDraw = (
@@ -358,7 +370,6 @@ export default defineComponent({
         padding,
         duration,
       });
-
     };
     const deleteDraw = (index = -1) => {
       if (index !== -1) {
@@ -378,7 +389,7 @@ export default defineComponent({
         drawList.value = [];
       }
     };
-    $bus.on("on-delete-draw", deleteDraw); 
+    $bus.on("on-delete-draw", deleteDraw);
 
     const detailDraw = async (index = -1) => {
       if (index !== -1) {
@@ -387,7 +398,7 @@ export default defineComponent({
           mapStore.setSelectedFeature({
             feature: feature,
             layer: null,
-          })
+          });
           const geoJsonData = await writeGeoJSON({ feature, map: unref(map) });
           zoomToDraw(
             unref(drawList)[index].position,
@@ -410,8 +421,9 @@ export default defineComponent({
                 image: response,
                 coordinate: coordinate,
               });
+              console.log("1");
             });
-          //  $bus.emit("on-show-detail", { content: geoJsonData });
+            $bus.emit("on-show-detail", { content: geoJsonData });
           }, 500);
         }
       }
@@ -490,8 +502,8 @@ export default defineComponent({
 
     onUnmounted(() => {
       $bus.off("on-delete-draw");
-    })
-    
+    });
+
     return {
       vm,
       map,

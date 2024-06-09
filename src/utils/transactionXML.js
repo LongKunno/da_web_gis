@@ -133,8 +133,23 @@ export const deleteXML = ({feature, workspace, layer, resolve = () => {}}) => {
 };
 
 export const updateXML = ({feature, workspace='danang', layer, resolve = () => {}}) => {
+  const gml = new GML({
+    srsName: "urn:ogc:def:crs:EPSG::5899",
+    multiCurve: true,
+    multiSurface: true,
+    surface: true,
+    curve: true,
+  });
   const rid = feature?.getId?.() || null
   const a = feature.getProperties()
+  debugger
+  const geometryNode = new XMLSerializer().serializeToString(
+    gml.writeGeometryNode(feature.getGeometry())
+  );
+
+  const xmlGeometry = geometryNode
+    .replace(/</g, "<gml:")
+    .replace(/<gml:\/\s*/g, "</gml:");
   delete a.geometry
   const xmlProperties = Object.entries(a).reduce((acc, item) => {
     acc =
@@ -145,6 +160,7 @@ export const updateXML = ({feature, workspace='danang', layer, resolve = () => {
   const transactionXML =
     '<wfs:Transaction xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd">\n' +
     `<wfs:Update typeName="feature:${layer}" xmlns:feature="${workspace}">\n` +
+    xmlGeometry +
     xmlProperties +
     '<fes:Filter>\n' +
     `<fes:ResourceId rid="${rid}" />\n` +

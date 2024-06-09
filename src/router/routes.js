@@ -1,66 +1,69 @@
-
 const routes = [
   {
-    path: '',
-    component: () => import('layouts/MainLayout.vue'),
+    path: "",
+    component: () => import("layouts/MainLayout.vue"),
+    meta: {
+      public: true,
+    },
     children: [
       {
-        path: '/map',
-        component: () => import('pages/IndexPage.vue'),
-        name: 'HomePage',
+        path: "/map",
+        component: () => import("pages/IndexPage.vue"),
+        name: "HomePage",
       },
       {
-        path: '/add-tree', // Đường dẫn mới cho trang AddTree
-        component: () => import('pages/AddTree.vue'), // Import component AddTree
-        name: 'AddTree', // Đặt tên cho định tuyến
+        path: "/add-tree", // Đường dẫn mới cho trang AddTree
+        component: () => import("pages/AddTree.vue"), // Import component AddTree
+        name: "AddTree", // Đặt tên cho định tuyến
       },
       {
-        path: 'user-management',
-        component: () => import('pages/UserManagementPage.vue'),
+        path: "user-management",
+        component: () => import("pages/UserManagementPage.vue"),
         meta: {
           authRequired: true,
         },
       },
       {
-        path: 'projection-management',
-        component: () => import('pages/ProjectionManagementPage/index.vue'),
+        path: "projection-management",
+        component: () => import("pages/ProjectionManagementPage/index.vue"),
         meta: {
           authRequired: true,
         },
       },
       {
-        path: 'location-management',
-        component: () => import('pages/locationManagementPage/index.vue'),
+        path: "location-management",
+        component: () => import("pages/locationManagementPage/index.vue"),
         meta: {
           authRequired: true,
         },
       },
-      { path: 'profile', component: () => import('pages/ProfilePage/index.vue') },
+      {
+        path: "profile",
+        component: () => import("pages/ProfilePage/index.vue"),
+      },
       // { path: 'logout', component: () => import('pages/LogoutPage.vue') },
-      
-    ]
+    ],
   },
   {
-    path: '/login',
-    component: () => import('pages/LoginPage/index.vue'),
-    name: 'LoginPage',
+    path: "/login",
+    component: () => import("pages/LoginPage/index.vue"),
+    name: "LoginPage",
     meta: {
       public: true,
     },
   },
   {
-    path: '/register',
-    component: () => import('pages/LoginPage/RegisterPage.vue'),
-    name: 'RegisterPage',
+    path: "/register",
+    component: () => import("pages/LoginPage/RegisterPage.vue"),
+    name: "RegisterPage",
     meta: {
       public: true,
     },
   },
   {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
+    path: "/:catchAll(.*)*",
+    component: () => import("pages/ErrorNotFound.vue"),
   },
+];
 
-]
-
-export default routes
+export default routes;

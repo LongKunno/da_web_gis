@@ -281,7 +281,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.searchClass {}
+
 
 .layerClass {
   border-top-left-radius: 1px;
