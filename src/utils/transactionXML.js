@@ -1,6 +1,7 @@
 import _isFunction from "lodash/isFunction";
 import _isArray from "lodash/isArray";
 import GML from "ol/format/GML";
+import { api } from "boot/axios";
 import { Buffer } from "buffer";
 import { Point, LineString, Polygon } from 'ol/geom';
 import { Feature } from 'ol';
@@ -81,14 +82,30 @@ export const addXML = ({feature, workspace, layer, resolve = () => {}}) => {
           icon: 'check_circle'
         })
         if(_isFunction(resolve)) resolve()
-        // Gọi hàm tạo database
-        
-        //
+
       }
       return response.text();
     })
     .then(function (responseText) {
       console.log(responseText);  
+      // Lấy id tree
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(responseText, "application/xml");
+      const namespaces = {
+          ogc: "http://www.opengis.net/ogc"
+      };
+      const featureIdElement = xmlDoc.evaluate('//ogc:FeatureId', xmlDoc, prefix => namespaces[prefix] || null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+      const id_tree = featureIdElement ? featureIdElement.getAttribute('fid') : null;
+
+      // Gọi hàm tạo database
+      api.post("features_management", {
+        properties: geometryProperties,
+        name: id_tree,
+        layer_name: id_tree.split('.')[0],
+      });
+      //-------------------------
+      // Print the result
+      console.log(id_tree.split('.')[0]);
       // Handle the response
     });
 };

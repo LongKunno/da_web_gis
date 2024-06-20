@@ -68,6 +68,7 @@ app.put('/api/features/:id', featureAPI.update)
 // app.put('/api/features/image/:name', upload.single('image'), featureAPI.update_image)
 app.get('/api/mapLayers/:layerId/features', featureAPI.getByLayer)
 app.get('/api/mapLayers/:layerId/features/external', featureAPI.getByLayerExternal)
+app.post('/api/features_management',featureAPI.create_management)
 
 //location
 app.post('/api/locations', locationAPI.create)

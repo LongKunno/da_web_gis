@@ -264,4 +264,28 @@ module.exports = {
       res.status(400).json({message: "Feature delete attempt failed!"})
     }
   },
+  create_management: async (req, res) => {
+    const { properties, name, layer_name } = req.body;
+    try {
+
+      const layer_obj = await prisma.mapLayer.findFirst({where: {
+        url: {
+          contains: `:${layer_name}`
+        },
+      },})
+
+      const data = await prisma.feature.create({
+        data: {
+          name: name,
+          properties: JSON.stringify(properties),
+          layerId: layer_obj ? layer_obj.id : null,
+        },
+      });
+      console.log("Feature create success!")
+    } catch (e) {
+      console.log("Feature create failed!")
+      console.log(e)
+      console.log("----------------------")
+    }
+  },
 };
