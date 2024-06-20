@@ -168,6 +168,7 @@ model Feature {
   name       String      @unique
   properties String?     @db.LongText
   
+  image String?
 
   layer   MapLayer? @relation(fields: [layerId], references: [id], onDelete: Cascade)
   layerId Int?

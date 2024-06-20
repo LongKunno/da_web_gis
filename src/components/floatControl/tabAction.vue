@@ -349,7 +349,7 @@ export default defineComponent({
             title: feature.get("name"),
             type: LAYER_TYPE[1],
             content: geoJsonData,
-            image: "https://cdn.quasar.dev/img/chicken-salad.jpg",
+            image: "images/No-image-available.png",
             coordinate: coordinateHDMS,
           });
           // $bus.emit("on-show-detail", { content: geoJsonData });

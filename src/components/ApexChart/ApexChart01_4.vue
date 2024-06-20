@@ -4,22 +4,23 @@
 
 <script>
     export default {
-    name: 'ApexChart01',
+    name: 'ApexChart01_4',
     data: function () {
         return {
             series: [
                 {
                     name: "STOCK ABC",
-                    data: [10, 20, 30, 40, 50, 60]
+                    data: [10, 200, 340, 540, 650, 1160]
                 }
             ],
             options: {
                 chart: {
+                    fontFamily: 'Times New Roman, serif',
                     type: 'area',
                     height: 350,
                     zoom: {
                         enabled: false
-                    }
+                    },
                 },
                 dataLabels: {
                     enabled: false
@@ -29,14 +30,14 @@
                 },
                 
                 title: {
-                    text: 'Biếu dồ quy mô quản lý',
+                    text: 'Biếu dồ quản lý đặc trưng',
                     align: 'left'
                 },
                 subtitle: {
-                    text: 'Số lượng ',
+                    text: 'Số lượng đặc trưng',
                     align: 'left'
                 },
-                labels: [10, 20, 50, 50, 70, 100],
+                labels: [0, 20, 40, 60, 80, 100],
                 xaxis: {
                     type: 'datetime',
                 },

@@ -8,7 +8,7 @@
     data: function () {
         return {
           
-          series: [44, 55, 41, 17, 15],
+          series: [1751, 414, 816],
           options: {
             chart: {
               width: 380,
@@ -20,7 +20,8 @@
                 left: 3,
                 blur: 3,
                 opacity: 0.2
-              }
+              },
+              fontFamily: 'Times New Roman, serif'
             },
             stroke: {
               width: 0,
@@ -38,7 +39,7 @@
                 }
               }
             },
-            labels: ["Comedy", "Action", "SciFi", "Drama", "Horror"],
+            labels: ["Point", "Line", "Polygon"],
             dataLabels: {
               dropShadow: {
                 blur: 3,
@@ -50,7 +51,7 @@
               opacity: 1,
               pattern: {
                 enabled: true,
-                style: ['verticalLines', 'squares', 'horizontalLines', 'circles','slantedLines'],
+                style: ['verticalLines', 'squares', 'horizontalLines'],
               },
             },
             states: {
@@ -62,7 +63,7 @@
               palette: 'palette2'
             },
             title: {
-              text: "Favourite Movie Type"
+              text: "Thông kê kiểu đối tượng"
             },
             responsive: [{
               breakpoint: 480,

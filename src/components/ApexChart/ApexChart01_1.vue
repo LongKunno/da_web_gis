@@ -4,17 +4,18 @@
 
 <script>
     export default {
-    name: 'ApexChart01',
+    name: 'ApexChart01_1',
     data: function () {
         return {
             series: [
                 {
                     name: "STOCK ABC",
-                    data: [10, 20, 30, 40, 50, 60]
+                    data: [5, 10, 15, 13, 13, 21]
                 }
             ],
             options: {
                 chart: {
+                    fontFamily: 'Times New Roman, serif',
                     type: 'area',
                     height: 350,
                     zoom: {
@@ -29,14 +30,14 @@
                 },
                 
                 title: {
-                    text: 'Biếu dồ quy mô quản lý',
+                    text: 'Biếu dồ quản lý tài khoản',
                     align: 'left'
                 },
                 subtitle: {
-                    text: 'Số lượng ',
+                    text: 'Số lượng tài khoản',
                     align: 'left'
                 },
-                labels: [10, 20, 50, 50, 70, 100],
+                labels: [0, 20, 40, 60, 80, 100],
                 xaxis: {
                     type: 'datetime',
                 },

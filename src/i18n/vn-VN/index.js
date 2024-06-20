@@ -12,6 +12,7 @@ export default {
   Download: "Tải xuống",
   Detail: "Chi tiết",
   Submit: "Submit",
+  "Dashboard management": "Biểu đồ thống kê",
   "Users management": "Quản lý các tài khoản",
   "Locations management": "Quản lý địa điểm",
   "Projections management": "Quản lý trục chiếu",

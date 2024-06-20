@@ -88,7 +88,7 @@ export default defineComponent({
     const adminInteraction = computed(() => [
       {
         title: $t("Dashboard management"),
-        icon: "fa-solid fa-users",
+        icon: "fa-solid fa-network-wired",
         to: "/dashboard-management",
         show: role === 'ADMIN',
       },

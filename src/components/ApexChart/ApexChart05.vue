@@ -19,7 +19,7 @@
                 hollow: {
                   margin: 15,
                   size: '70%',
-                  image: 'https://img.pikbest.com/origin/09/41/85/916pIkbEsTzRC.jpg!w700wp',
+                  image: 'https://www.pikpng.com/pngl/b/74-745720_download-img-icon-png-clipart.png',
                   imageWidth: 64,
                   imageHeight: 64,
                   imageClipped: false
@@ -41,7 +41,7 @@
             fill: {
               type: 'image',
               image: {
-                src: ['https://img.pikbest.com/origin/09/41/85/916pIkbEsTzRC.jpg!w700wp'],
+                src: ['https://sheokhanda.wordpress.com/wp-content/uploads/2010/06/spring-colors.jpg'],
               }
             },
             stroke: {

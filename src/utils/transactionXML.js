@@ -55,6 +55,10 @@ export const addXML = ({feature, workspace, layer, resolve = () => {}}) => {
     "</wfs:Insert>\n" +
     "</wfs:Transaction>\n";
   const insertRequestUrl = `${process.env.GEO_SERVER_URL}/${workspace}/wfs`;
+  console.log(geometryProperties);
+  
+  console.log("insertRequestUrl:", insertRequestUrl);
+  console.log("transactionXML:", transactionXML);
   fetch(insertRequestUrl, {
     mode:'cors',
     method: "POST",
@@ -77,6 +81,9 @@ export const addXML = ({feature, workspace, layer, resolve = () => {}}) => {
           icon: 'check_circle'
         })
         if(_isFunction(resolve)) resolve()
+        // Gọi hàm tạo database
+        
+        //
       }
       return response.text();
     })

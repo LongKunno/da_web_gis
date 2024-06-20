@@ -65,6 +65,7 @@ import {
 import _debounce from "lodash/debounce";
 import _isEmpty from "lodash/isEmpty";
 import { useQuasar } from "quasar";
+import axios from 'axios';
 import { i18n } from "boot/i18n.js";
 import { $bus } from "boot/bus.js";
 import FloatSearch from "src/components/floatSearch/index.vue";
@@ -129,6 +130,7 @@ export default defineComponent({
         floatDetailProps.value.title = title;
       }
       if (image) {
+        console.log('longdd_2')
         floatDetailProps.value.image = image;
       }
       if (content) {
@@ -259,6 +261,7 @@ export default defineComponent({
         setTimeout(() => {
           captureScreenshot().then((response) => {
             floatDetailProps.value.image = response;
+            console.log('longdd_4')
           });
         }, 1000);
       });
@@ -352,6 +355,7 @@ export default defineComponent({
                 setTimeout(() => {
                   captureScreenshot().then((response) => {
                     floatDetailProps.value.image = response;
+                    console.log('longdd_6')
                   });
                 }, 800);
                 // set float detail
@@ -398,7 +402,21 @@ export default defineComponent({
                     if (features[0].getId?.()) getFeatureAPI(features[0]);
                     setTimeout(() => {
                       captureScreenshot().then((response) => {
-                        floatDetailProps.value.image = response;
+                        var data_img = "images/No-image-available.png"
+                        const name = features[0].getId?.();
+
+                        axios.get(`${process.env.API_HOST}:${process.env.API_PORT}/api/features/${name}`)
+                          .then(response => {
+                            if (response.data.image != null && response.data.image != '') {
+                              data_img = response.data.image
+                              floatDetailProps.value.image = data_img;
+                            }
+                          })
+                          .catch(error => {
+                            console.error(error);
+                            floatDetailProps.value.image = data_img;
+                          });
+                        
                       });
                     }, 1500);
                   } else {

@@ -12,6 +12,7 @@ export default {
   Download: 'Download',
   Detail: 'Detail',
   Submit: 'Submit',
+  'Dashboard management': 'Dashboard management',
   'Users management': 'Users management',
   'Locations management': 'Locations management',
   'Projections management': 'Projections management',

@@ -1,3 +1,7 @@
+// Xoá dữ liệu thư viện cũ
+npm cache clean --force
+npm config set registry http://registry.npmjs.org/
+// cài đặt thư viện
 npm instal
 npm install -g @vue/cli
 npm install -g @quasar/cli
@@ -6,7 +10,10 @@ npm install -g prisma
 npm install @prisma/cli
 npm install @prisma/client
 npm i dotenv
+// update sql theo prisma
 npx prisma db push
+// Cập nhật db sau khi push
+npx prisma generate
 thay doi env
 
 

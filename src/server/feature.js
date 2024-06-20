@@ -1,5 +1,7 @@
 const { PrismaClient, FeatureType } = require("@prisma/client");
 const prisma = new PrismaClient();
+const fs = require('fs');
+const dotenv = require('dotenv').config();
 module.exports = {
   /**
    * @swagger
@@ -82,6 +84,29 @@ module.exports = {
       });
       res.json(data);
     } catch {
+      res.status(400).json({message: "Feature update attempt failed!"})
+    }
+  },
+  update_image: async (req, res) => {
+    const imageBuffer = fs.readFileSync(req.file.path);
+    // const imageBytes = Buffer.from(imageBuffer).toString('base64');
+    const { name } = req.params;
+    console.log(req.file.path)
+    console.log(req.file.filename)
+    try {
+      const data = await prisma.feature.update({
+        where: {
+          name,
+        },
+        data: {
+          image: `${dotenv.parsed.FE_HOST}:${dotenv.parsed.FE_PORT}/images/data/${req.file.filename}`,
+        },
+      });
+
+      console.log("Done!");
+      res.status(200).json(data);
+    } catch (e) {
+      console.log(e)
       res.status(400).json({message: "Feature update attempt failed!"})
     }
   },
