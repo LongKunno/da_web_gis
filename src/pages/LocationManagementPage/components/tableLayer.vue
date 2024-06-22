@@ -49,7 +49,7 @@
             <q-btn size="sm" class="bg-white text-primary" round dense @click="propsLayer.expand = !propsLayer.expand"
               :icon="propsLayer.expand ? 'expand_less' : 'expand_more'" />
           </q-td>
-          <q-td key="action" :props="propsLayer">
+          <q-td key="action" :props="propsLayer"  style="display:none;">
             <q-btn v-bind="{
               ...actionButtonProps,
               color: 'white',

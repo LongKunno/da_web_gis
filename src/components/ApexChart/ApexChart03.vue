@@ -3,18 +3,35 @@
 </template>
 
 <script>
+    import axios from 'axios';
     export default {
     name: 'ApexChart03',
     data: function () {
         return {
           
-          series: [{
+          series: [],
+          options: {},
+
+            }
+        },
+        mounted() {
+    axios.get(`${process.env.API_HOST}:${process.env.API_PORT}/api/chart_5`)
+      .then(response => {
+        const newData = response.data.list_data;
+        const newCategories = response.data.categories;
+        console.log(newData);
+        
+        // Cập nhật dữ liệu cho series và labels
+        this.series = [
+          {
             name: 'Tỉ lệ',
-            data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
-          }],
-          options: {
+            data: newData
+          }
+        ];
+
+        this.options = {
             chart: {
-              height: 350,
+              height: 400,
               type: 'bar',
               fontFamily: 'Times New Roman, serif',
             },
@@ -29,7 +46,7 @@
             dataLabels: {
               enabled: true,
               formatter: function (val) {
-                return val + "%";
+                return val;
               },
               offsetY: -20,
               style: {
@@ -39,7 +56,7 @@
             },
             
             xaxis: {
-              categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+              categories: newCategories,
               position: 'bottom',
               axisBorder: {
                 show: false
@@ -73,25 +90,25 @@
               labels: {
                 show: false,
                 formatter: function (val) {
-                  return val + "%";
+                  return val;
                 }
               }
             
             },
             title: {
-              text: 'Biểu đồ thống kê số lượng cây được quản lý',
+              text: 'Biểu đồ thống kê số lượng cây xanh',
               floating: true,
               offsetY: 0,
-              align: 'center',
+              align: 'left',
               style: {
                 color: '#444'
               }
             }
-          },
-
-            
-            
-            }
-        }
+          }
+      })
+      .catch(error => {
+        console.error('-- Get data chart error--', error);
+      });
+    }
     }
 </script>

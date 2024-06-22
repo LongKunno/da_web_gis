@@ -159,6 +159,7 @@ export default defineComponent({
 
           // console.log(response.data);
           // floatDetailProps.value.image = response.data.image;
+          window.location.reload();
       };
 
         fileInput.click();

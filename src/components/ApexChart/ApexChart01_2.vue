@@ -3,24 +3,35 @@
 </template>
 
 <script>
+    import axios from 'axios';
     export default {
     name: 'ApexChart01_2',
     data: function () {
         return {
-            series: [
-                {
-                    name: "STOCK ABC",
-                    data: [10, 100, 100, 250, 345, 500]
-                }
-            ],
-            options: {
+            series: [],
+            options: {},
+        }
+    },
+    mounted() {
+    axios.get(`${process.env.API_HOST}:${process.env.API_PORT}/api/chart_2`)
+      .then(response => {
+        const newData = response.data.list_data;
+        const newCategories = response.data.categories;
+        console.log(newData);
+        
+        // Cập nhật dữ liệu cho series và labels
+        this.series = [
+          {
+            name: "Locations",
+            data: newData // Dữ liệu lấy từ API
+          }
+        ];
+
+        this.options = {
                 chart: {
                     fontFamily: 'Times New Roman, serif',
                     type: 'area',
-                    height: 350,
-                    zoom: {
-                        enabled: false
-                    }
+                    height: 250,
                 },
                 dataLabels: {
                     enabled: false
@@ -28,18 +39,16 @@
                 stroke: {
                     curve: 'straight'
                 },
-                
                 title: {
-                    text: 'Biếu dồ quản lý địa điểm',
+                    text: 'Biếu đồ quản lý địa điểm',
                     align: 'left'
                 },
                 subtitle: {
-                    text: 'Số lượng địa điểm',
+                    text: 'Thông kê số lượng địa điểm theo từng tháng',
                     align: 'left'
                 },
-                labels: [0, 5, 10, 15, 20, 25],
                 xaxis: {
-                    type: 'datetime',
+                    categories: newCategories
                 },
                 yaxis: {
                     opposite: true
@@ -47,8 +56,11 @@
                 legend: {
                     horizontalAlign: 'left'
                 }
-            },
-        }
+            }
+      })
+      .catch(error => {
+        console.error('-- Get data chart error--', error);
+      });
     }
 }
 </script>

@@ -94,6 +94,17 @@ module.exports = {
     console.log(req.file.path)
     console.log(req.file.filename)
     try {
+      const obj_old = await prisma.feature.findMany({
+        where: {
+          name,
+        },
+      });
+
+      if (obj_old) {
+        link_img_old = obj_old.image
+        console.log("delete old image", link_img_old)
+      }
+
       const data = await prisma.feature.update({
         where: {
           name,
@@ -286,6 +297,39 @@ module.exports = {
       console.log("Feature create failed!")
       console.log(e)
       console.log("----------------------")
+    }
+  },
+  delete_management: async (req, res) => {
+    const { name } = req.body;
+    console.log("-- post delete --", name)
+    try {
+      const response = await prisma.feature.delete({
+        where: {
+          name,
+        },
+      });
+      console.log("delete_done", name)
+      res.json(response);
+    } catch (e) {
+      res.status(400).json({message: "Feature delete attempt failed!"})
+    }
+  },
+  update_management: async (req, res) => {
+    const { properties, name } = req.body;
+    console.log("-- post update --", name)
+    try {
+      const data = await prisma.feature.update({
+        where: {
+          name,
+        },
+        data: {
+          properties: JSON.stringify(properties),
+        },
+      });
+      console.log("-- update done --", name)
+      res.json(data);
+    } catch {
+      res.status(400).json({message: "Feature update attempt failed!"})
     }
   },
 };

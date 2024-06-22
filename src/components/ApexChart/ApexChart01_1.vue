@@ -3,24 +3,35 @@
 </template>
 
 <script>
+    import axios from 'axios';
+
     export default {
     name: 'ApexChart01_1',
     data: function () {
         return {
-            series: [
-                {
-                    name: "STOCK ABC",
-                    data: [5, 10, 15, 13, 13, 21]
-                }
-            ],
-            options: {
+            series: [],
+            options: {},
+        }
+    },
+    mounted() {
+    axios.get(`${process.env.API_HOST}:${process.env.API_PORT}/api/chart_1`)
+      .then(response => {
+        const newData = response.data.list_data;
+        const newCategories = response.data.categories;
+        
+        // Cập nhật dữ liệu cho series và labels
+        this.series = [
+          {
+            name: "Users",
+            data: newData // Dữ liệu lấy từ API
+          }
+        ];
+
+        this.options = {
                 chart: {
                     fontFamily: 'Times New Roman, serif',
                     type: 'area',
-                    height: 350,
-                    zoom: {
-                        enabled: false
-                    }
+                    height: 250,
                 },
                 dataLabels: {
                     enabled: false
@@ -30,16 +41,15 @@
                 },
                 
                 title: {
-                    text: 'Biếu dồ quản lý tài khoản',
+                    text: 'Biếu đồ quản lý tài khoản',
                     align: 'left'
                 },
                 subtitle: {
-                    text: 'Số lượng tài khoản',
+                    text: 'Thông kê số lượng tài khoản theo từng tháng',
                     align: 'left'
                 },
-                labels: [0, 20, 40, 60, 80, 100],
                 xaxis: {
-                    type: 'datetime',
+                    categories: newCategories
                 },
                 yaxis: {
                     opposite: true
@@ -47,8 +57,11 @@
                 legend: {
                     horizontalAlign: 'left'
                 }
-            },
-        }
+            }
+      })
+      .catch(error => {
+        console.error('-- Get data chart error--', error);
+      });
     }
 }
 </script>

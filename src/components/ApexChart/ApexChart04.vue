@@ -3,57 +3,44 @@
 </template>
 
 <script>
+    import axios from 'axios';
     export default {
     name: 'ApexChart04',
     data: function () {
         return {
-            series: [
-                {
-                data: [
-                    { x: 'Không có dữ liệu', y: 1 },
-                ]
-                }
-            ],
-            options: {
+            series: [],
+            options: {},
+        };
+    },
+    mounted() {
+    axios.get(`${process.env.API_HOST}:${process.env.API_PORT}/api/chart_6`)
+      .then(response => {
+        const newData = response.data.list_data;
+        
+        // Cập nhật dữ liệu cho series và labels
+        this.series = [
+            {
+            data: newData
+            }
+        ];
+
+        this.options = {
                 legend: {
                 show: false
                 },
                 chart: {
-                height: 350,
+                height: 400,
                 type: 'treemap',
                 fontFamily: 'Times New Roman, serif' // Thay đổi phông chữ tại đây
                 },
                 title: {
-                text: 'Thống kê số lượng cây xanh',
+                text: 'Biểu đồ thống kê số lượng cây xanh theo vị trí',
                 }
-            },
-        };
-    },
-    mounted() {
-        this.updateChart();
-    },
-    methods: {
-        updateChart() {
-
-            this.series = 
-            [{
-                data: [
-                    { x: 'Nguyễn Văn Linh', y: 218 },
-                    { x: 'Trường Chinh', y: 149 },
-                    { x: 'Công viên 29/3', y: 184 },
-                    { x: 'Lê Tấn Trung', y: 55 },
-                    { x: 'Ông Ích Khiêm', y: 84 },
-                    { x: 'Nguyễn Lương Bằng', y: 31 },
-                    { x: 'Dũng Sĩ Thanh Khê', y: 70 },
-                    { x: 'Hoàng Sa', y: 30 },
-                    { x: 'Cầu Rồng', y: 44 },
-                    { x: 'Lê Duẫn', y: 68 },
-                    { x: 'Trần Thị Lý', y: 28 },
-                    { x: 'Núi Thần', y: 19 },
-                    { x: 'Nguyễn Tất Thành', y: 29 }
-                ]
-            }];
-        }
+            }
+      })
+      .catch(error => {
+        console.error('-- Get data chart error--', error);
+      });
     }
 };
 </script>

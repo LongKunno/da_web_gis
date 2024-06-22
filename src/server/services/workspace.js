@@ -110,4 +110,247 @@ module.exports = {
       res.status(500).json({ error: error.message });
     }
   },
+  get_chart_1: async (req, res) => {
+    const data_return = {
+      "list_data": [0],
+      "categories": ["0"],
+    }
+    try {
+      // lấy data init
+      const today = new Date();
+      const YearsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 1);
+      let currentDate = new Date(YearsAgo);
+      const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+      while (currentDate <= endDate) {
+        const nextMonth = new Date(currentDate);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+    
+        const usersCount = await prisma.user.count({
+          where: {
+            createdAt: {
+              lt: nextMonth,
+            }
+          }
+        });
+
+        data_return['list_data'].push(usersCount);
+        data_return['categories'].push(`${currentDate.getMonth()+1}/${currentDate.getFullYear().toString().slice(-2)}`);
+    
+        currentDate = nextMonth;
+      }
+    
+      await prisma.$disconnect();
+
+      res.json(data_return);
+    } catch (error) {
+      console.log(error);
+      res.json(data_return);
+    }
+  },
+  get_chart_2: async (req, res) => {
+    const data_return = {
+      "list_data": [0],
+      "categories": ["0"],
+    }
+    try {
+      // lấy data init
+      const today = new Date();
+      const YearsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 1);
+      let currentDate = new Date(YearsAgo);
+      const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+      while (currentDate <= endDate) {
+        const nextMonth = new Date(currentDate);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+    
+        const usersCount = await prisma.location.count({
+          where: {
+            createdAt: {
+              lt: nextMonth,
+            }
+          }
+        });
+
+        data_return['list_data'].push(usersCount);
+        data_return['categories'].push(`${currentDate.getMonth()+1}/${currentDate.getFullYear().toString().slice(-2)}`);
+    
+        currentDate = nextMonth;
+      }
+    
+      await prisma.$disconnect();
+
+      res.json(data_return);
+    } catch (error) {
+      console.log(error);
+      res.json(data_return);
+    }
+  },
+  get_chart_3: async (req, res) => {
+    const data_return = {
+      "list_data": [0],
+      "categories": ["0"],
+    }
+    try {
+      // lấy data init
+      const today = new Date();
+      const YearsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 1);
+      let currentDate = new Date(YearsAgo);
+      const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+      while (currentDate <= endDate) {
+        const nextMonth = new Date(currentDate);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+    
+        const usersCount = await prisma.mapLayer.count({
+          where: {
+            createdAt: {
+              lt: nextMonth,
+            }
+          }
+        });
+
+        data_return['list_data'].push(usersCount);
+        data_return['categories'].push(`${currentDate.getMonth()+1}/${currentDate.getFullYear().toString().slice(-2)}`);
+    
+        currentDate = nextMonth;
+      }
+    
+      await prisma.$disconnect();
+
+      res.json(data_return);
+    } catch (error) {
+      console.log(error);
+      res.json(data_return);
+    }
+  },
+  get_chart_4: async (req, res) => {
+    const data_return = {
+      "list_data": [0],
+      "categories": ["0"],
+    }
+    try {
+      // lấy data init
+      const today = new Date();
+      const YearsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 1);
+      let currentDate = new Date(YearsAgo);
+      const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+      while (currentDate <= endDate) {
+        const nextMonth = new Date(currentDate);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+    
+        const usersCount = await prisma.feature.count({
+          where: {
+            createdAt: {
+              lt: nextMonth,
+            }
+          }
+        });
+
+        data_return['list_data'].push(usersCount);
+        data_return['categories'].push(`${currentDate.getMonth()+1}/${currentDate.getFullYear().toString().slice(-2)}`);
+    
+        currentDate = nextMonth;
+      }
+    
+      await prisma.$disconnect();
+
+      res.json(data_return);
+    } catch (error) {
+      console.log(error);
+      res.json(data_return);
+    }
+  },
+  get_chart_5: async (req, res) => {
+    const data_return = {
+      "list_data": [],
+      "categories": [],
+    }
+    try {
+      // lấy data init
+      const today = new Date();
+      const YearsAgo = new Date(today.getFullYear() - 1, today.getMonth(), 1);
+      let currentDate = new Date(YearsAgo);
+      const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+      while (currentDate <= endDate) {
+        const nextMonth = new Date(currentDate);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+    
+        const usersCount = await prisma.feature.count({
+          where: {
+            name: {
+              contains: "tree"
+            },
+            createdAt: {
+              gte: currentDate,
+              lt: nextMonth,
+            }
+          }
+        });
+
+        data_return['list_data'].push(usersCount);
+        data_return['categories'].push(`${currentDate.getMonth()+1}/${currentDate.getFullYear().toString().slice(-2)}`);
+    
+        currentDate = nextMonth;
+      }
+    
+      await prisma.$disconnect();
+
+      res.json(data_return);
+    } catch (error) {
+      console.log(error);
+      res.json(data_return);
+    }
+  },
+  get_chart_6: async (req, res) => {
+    const data_return = {
+      "list_data": [],
+    }
+    try {
+      const list_obj_feature_tree = await prisma.feature.findMany({
+        where: {
+          name: {
+            contains: "tree"
+          },
+        }
+      });
+      // Lấy tất cả tên đường
+      list_all_address = []
+      for (const obj_feature of list_obj_feature_tree) {
+        if (obj_feature.properties){
+          try {
+            dict_feature = JSON.parse(obj_feature.properties)
+            if (dict_feature.hasOwnProperty('dia_chi') && dict_feature.dia_chi.trim() != "" ) {
+              list_all_address.push(dict_feature.dia_chi);
+            } else {
+              list_all_address.push("No Address");
+            }
+            
+          } catch {}
+
+        }
+      }
+
+      let list_all_address_no_loop = [...new Set(list_all_address)];
+
+      for (const address_no_loop of list_all_address_no_loop){
+        count_address = 0
+        for (const address_loop of list_all_address){
+          if (address_loop == address_no_loop){
+            count_address += 1;
+          }
+        }
+        data_return['list_data'].push({x: address_no_loop, y: count_address});
+      }
+    
+
+      await prisma.$disconnect();
+      res.json(data_return);
+
+    } catch (error) {
+      res.json(data_return);
+    }
+  },
 };

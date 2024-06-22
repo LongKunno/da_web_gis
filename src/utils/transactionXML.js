@@ -146,6 +146,11 @@ export const deleteXML = ({feature, workspace, layer, resolve = () => {}}) => {
           color: 'primary',
           icon: 'check_circle'
         })
+        // Gọi hàm xoá database
+        api.post(`features_management/delete`, {
+          name: rid,
+        });
+      //-------------------------
         if(_isFunction(resolve)) resolve()
       }
       return response.text();
@@ -215,6 +220,21 @@ export const updateXML = ({feature, workspace='danang', layer, resolve = () => {
           color: 'primary',
           icon: 'check_circle'
         })
+        // Gọi hàm xoá database
+        console.log(a)
+        api.post(`features_management/update`, {
+          properties: {
+            "ten_cay": a.ten_cay,
+            "dia_chi": a.dia_chi,
+            "dac_diem": a.dac_diem,
+            "benh": a.benh,
+            "created_at": a.created_at,
+            "toado_x": a.toado_x,
+            "toado_y": a.toado_y,
+          },
+          name: rid,
+        });
+      //-------------------------
         if(_isFunction(resolve)) resolve()
       }
       return response.text();

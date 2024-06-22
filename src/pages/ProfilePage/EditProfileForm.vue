@@ -1,27 +1,26 @@
 <template>
   <q-card class="myCardClass" flat bordered>
       <q-card-section horizontal>
-        <q-card-section class="q-pt-xs inputClass" style="width: 800px;">
-          <div class="text-h4">{{$t("Profile")}}</div>
+        <q-card-section class="q-pt-xs inputClass" style="width: 100%;">
           <div class="text-h6">{{$t("Basic information")}}</div>
-          <q-card-section horizontal>
-            <q-input :label="$t('First Name')" v-model="userProfile.given_name" />
-            <q-input :label="$t('Last Name')"  v-model="userProfile.family_name" />
-            <q-input :label="$t('Date of Birth')"  v-model="userProfile.birthday" />
-            <q-input :label="$t('Gender')" v-model="userProfile.gender" />
+          <q-card-section horizontal style="flex-wrap:wrap;">
+            <q-input :label="$t('First Name')" v-model="userProfile.given_name" style="width: 45%;" />
+            <q-input :label="$t('Last Name')"  v-model="userProfile.family_name" style="width: 45%;" />
+            <q-input :label="$t('Date of Birth')"  v-model="userProfile.birthday" style="width: 45%;" />
+            <q-input :label="$t('Gender')" v-model="userProfile.gender" style="width: 45%;" />
           </q-card-section>
           <div class="text-h6">{{$t("Communicate information")}}</div>
-          <q-card-section horizontal>
-            <q-input :label="$t('Email')" v-model="userProfile.email" />
-            <q-input :label="$t('Phone Number')" v-model="userProfile.phone_number" />
+          <q-card-section horizontal style="flex-wrap:wrap;">
+            <q-input :label="$t('Email')" v-model="userProfile.email" style="width: 45%;" />
+            <q-input :label="$t('Phone Number')" v-model="userProfile.phone_number" style="width: 45%;" />
           </q-card-section>
           <q-card-section horizontal>
-            <q-input :label="$t('Address')" v-model="userProfile.address" />
-            <q-input :label="$t('Current Location')" v-model="userProfile.current_location" />
+            <q-input :label="$t('Address')" v-model="userProfile.address" style="width: 45%;" />
+            <q-input :label="$t('Current Location')" v-model="userProfile.current_location" style="width: 45%;" />
           </q-card-section>
         </q-card-section>
         <q-separator vertical />
-        <q-card-section class="col-5 flex flex-center">
+        <q-card-section class="col-5 flex flex-center" style="display:none;">
           <q-img
             class="rounded-borders"
             :src="userProfile.picture"

@@ -25,7 +25,7 @@
         <q-td key="properties" :props="propsFeature">
           {{ propsFeature.row.properties }}
         </q-td>
-        <q-td key="action" :props="propsFeature">
+        <q-td key="action" :props="propsFeature" style="display:none;">
           <q-btn v-bind="actionButtonProps" icon="edit" style="margin-right: 10px">
             <!-- popup feature edit -->
             <popupFeature v-model:row="propsFeature.row" :feature-rows="propsLayer.features" />

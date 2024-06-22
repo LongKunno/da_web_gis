@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <q-page>
+  <q-page style="margin-top: 20px;">
   <!-- <ApexChartTest></ApexChartTest> -->
     <div class="row">
       <div class="col-md-3" style="padding-left:10px; padding-right:10px;">
@@ -16,7 +16,7 @@
         <ApexChart01_4></ApexChart01_4>
       </div>
     </div>
-    <div class="row">
+    <div class="row" style="margin-top: 20px;">
       <div class="col-md-6" style="padding-left:10px; padding-right:10px;">
           <ApexChart03></ApexChart03>
       </div>

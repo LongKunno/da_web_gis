@@ -69,6 +69,8 @@ app.put('/api/features/:id', featureAPI.update)
 app.get('/api/mapLayers/:layerId/features', featureAPI.getByLayer)
 app.get('/api/mapLayers/:layerId/features/external', featureAPI.getByLayerExternal)
 app.post('/api/features_management',featureAPI.create_management)
+app.post('/api/features_management/delete',featureAPI.delete_management)
+app.post('/api/features_management/update',featureAPI.update_management)
 
 //location
 app.post('/api/locations', locationAPI.create)
@@ -88,6 +90,13 @@ app.post('/api/workspaces/sync', workspaceAPI.syncWorkspace)
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server started on port ${process.env.PORT || 3000}`)
 })
+// Dashboard
+app.get('/api/chart_1', workspaceAPI.get_chart_1)
+app.get('/api/chart_2', workspaceAPI.get_chart_2)
+app.get('/api/chart_3', workspaceAPI.get_chart_3)
+app.get('/api/chart_4', workspaceAPI.get_chart_4)
+app.get('/api/chart_5', workspaceAPI.get_chart_5)
+app.get('/api/chart_6', workspaceAPI.get_chart_6)
 
 
 // projection

@@ -1,3 +1,5 @@
+// AI Ollama
+ollama run llama3 (mở terminal và chạy để khởi động)
 // Xoá dữ liệu thư viện cũ
 npm cache clean --force
 npm config set registry http://registry.npmjs.org/

@@ -58,21 +58,32 @@ export default {
         data: message,
       });
       this.currentMessage = '';
-      await axios
-        .post('http://localhost:3000/api/chatbot', {
-          message: message,
-        })
-       .then((response) => {
-          if (response.data.data != 'new_story'){
+     
+          try {
             this.messages.push({
-            from: 'chatGpt',
-            data: response.data.data, // Access the 'data' property of the response object
-          });
-          }else{
-            this.messages = []
-            console.log(response.data.data)
+                from: 'chatGpt',
+                data: "Vui lòng chờ trong giây lát!", // Access the 'data' property of the response object
+              });
+
+            const response = await axios.post('http://localhost:11434/api/generate', {
+              model: "llama3",
+              prompt: message,
+              stream: false
+            }).then((response) => {
+                this.messages.push({
+                from: 'chatGpt',
+                data: response.data.response, // Access the 'data' property of the response object
+              });
+            });
+          } catch (error) {
+            this.messages.push({
+                from: 'chatGpt',
+                data: "Có lỗi xảy ra trong quá trình xử lý!", // Access the 'data' property of the response object
+              });
+            console.error('Error fetching data:', error);
           }
-      });
+
+
     },
 
     hideChatAI() { 

@@ -3,24 +3,35 @@
 </template>
 
 <script>
+    import axios from 'axios';
     export default {
     name: 'ApexChart01_3',
     data: function () {
         return {
-            series: [
-                {
-                    name: "STOCK ABC",
-                    data: [10, 20, 50, 50, 50, 70]
-                }
-            ],
-            options: {
+            series: [],
+            options: {},
+        }
+    },
+    mounted() {
+    axios.get(`${process.env.API_HOST}:${process.env.API_PORT}/api/chart_3`)
+      .then(response => {
+        const newData = response.data.list_data;
+        const newCategories = response.data.categories;
+        console.log(newData);
+        
+        // Cập nhật dữ liệu cho series và labels
+        this.series = [
+          {
+            name: "Layers",
+            data: newData // Dữ liệu lấy từ API
+          }
+        ];
+
+        this.options = {
                 chart: {
                     fontFamily: 'Times New Roman, serif',
                     type: 'area',
-                    height: 350,
-                    zoom: {
-                        enabled: false
-                    }
+                    height: 250,
                 },
                 dataLabels: {
                     enabled: false
@@ -28,18 +39,16 @@
                 stroke: {
                     curve: 'straight'
                 },
-                
                 title: {
-                    text: 'Biếu dồ quản lý Layer',
+                    text: 'Biếu đồ quản lý Layer',
                     align: 'left'
                 },
                 subtitle: {
-                    text: 'Số lượng Layer',
+                    text: 'Thông kê số lượng Layer theo từng tháng',
                     align: 'left'
                 },
-                labels: [0, 20, 40, 60, 80, 100],
                 xaxis: {
-                    type: 'datetime',
+                    categories: newCategories
                 },
                 yaxis: {
                     opposite: true
@@ -47,8 +56,11 @@
                 legend: {
                     horizontalAlign: 'left'
                 }
-            },
-        }
+            }
+      })
+      .catch(error => {
+        console.error('-- Get data chart error--', error);
+      });
     }
 }
 </script>
