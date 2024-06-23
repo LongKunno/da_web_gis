@@ -81,7 +81,6 @@
               icon="edit"
               style="margin-right: 10px"
             >
-              <!-- popup location edit -->
               <PopupLocation
                 v-model:row="propsLocation.row"
                 :location-rows="locationRows"

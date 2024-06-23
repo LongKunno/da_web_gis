@@ -1,9 +1,9 @@
 <template>
   <q-page-sticky class="stickyClass" position="top-right" :offset="[10, 10]">
-    <q-card class="my-card" flat bordered style="width: 400px">
-      <q-carousel swipeable animated v-model="slideImage" control-color="secondary" navigation infinite
-        ref="carousel" style="height: 200px">
-        <q-carousel-slide :name="1" :img-src="image" />
+    <q-card class="my-card form-update-img" flat bordered style="width: 400px">
+      <q-carousel swipeable animated v-model="slideImage" control-color="secondary" infinite
+        ref="carousel" style="height: 200px;">
+        <q-carousel-slide :name="1" :img-src="image" @click="addImage" id="popup-image-detail"/>
         <template v-slot:control>
           <q-carousel-control position="top-left" class="text-white rounded-borders">
             <q-btn class="absolute shadow-2 closeClass" round color="white" text-color="black" icon="close" size="sm"
@@ -13,7 +13,7 @@
       </q-carousel>
       <q-card-section>
         <q-btn fab color="primary" icon="place" class="absolute"
-          style="top: 0; right: 12px; transform: translateY(-50%)" />
+          style="top: 0; right: 12px; transform: translateY(-50%)"/>
 
         <div class="row no-wrap items-center">
           <span class="col text-h6 ellipsis" v-html="title"></span>
@@ -77,6 +77,8 @@ import DetailTable from 'src/components/floatDetail/detailTable.vue'
 import { LAYER_TYPE, FEATURE_TYPE } from "src/constants/enum";
 import { useMapStore } from "stores/map";
 import { updateXML } from "src/utils/transactionXML";
+import axios from 'axios'
+
 
 export default defineComponent({
   name: "FloatDetail",
@@ -98,7 +100,7 @@ export default defineComponent({
     },
     image: {
       type: String,
-      default: "https://cdn.quasar.dev/img/chicken-salad.jpg",
+      default: "images/No-image-available.png",
     },
     distance: {
       type: Number,
@@ -135,6 +137,39 @@ export default defineComponent({
       $bus.emit("close-float-detail", true);
       emit("update:model-value", false);
     };
+
+    const addImage = async () => { 
+      try {
+        // Tạo thẻ input
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file'; 
+        fileInput.accept = 'image/*';
+        // hàm xử lý
+        fileInput.onchange = async (e) => {
+          const file = e.target.files[0]; 
+          const formData = new FormData();
+          formData.append('image', file);
+          // Gửi formData cho server bằng Axios
+          const name = props.id
+          const response = await axios.post(`${process.env.API_HOST}:${process.env.API_PORT}/api/features/image/${name}`, formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
+          });
+
+          // console.log(response.data);
+          // floatDetailProps.value.image = response.data.image;
+          var element = document.getElementById('popup-image-detail');
+          element.style.backgroundImage = `url('${response.data.image}')`;
+          // window.location.reload();
+      };
+
+        fileInput.click();
+      } catch (error) {
+          console.error(error);
+      }
+    };
+
     const distanceToMyLocation = computed(() => {
       return props.distance;
     });
@@ -175,6 +210,7 @@ export default defineComponent({
       tabExpanded,
       distanceToMyLocation,
       closeCard,
+      addImage,
       updateContent,
       typeComputed: computed(() => props.type)
     };
@@ -229,10 +265,5 @@ body {
   cursor: auto !important;
 }
 
-.my-card {
-  .q-carousel__navigation-inner{
-    display: none !important;
-  }
-}
   
 </style>

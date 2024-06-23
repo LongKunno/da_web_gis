@@ -10,7 +10,7 @@
             expanded = true;
           }
           " />
-        <q-btn flat dense :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" style="height: 100%"
+        <q-btn flat dense :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" style="height: 100%;"
           @click="expanded = !expanded" />
       </q-tabs>
       <q-separator />
@@ -119,5 +119,9 @@ body {
 .panelClass {
   padding: 0; 
   display: grid;
+}
+
+.q-tabs__arrow--right{
+  display: none;
 }
 </style>

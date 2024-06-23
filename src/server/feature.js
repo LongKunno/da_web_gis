@@ -1,5 +1,8 @@
 const { PrismaClient, FeatureType } = require("@prisma/client");
 const prisma = new PrismaClient();
+const fs = require('fs');
+const path = require('path');
+const dotenv = require('dotenv').config();
 module.exports = {
   /**
    * @swagger
@@ -84,6 +87,61 @@ module.exports = {
     } catch {
       res.status(400).json({message: "Feature update attempt failed!"})
     }
+  },
+  update_image: async (req, res) => {
+    const imageBuffer = fs.readFileSync(req.file.path);
+    // const imageBytes = Buffer.from(imageBuffer).toString('base64');
+    const { name } = req.params;
+    console.log(req.file.path)
+    console.log(req.file.filename)
+    try {
+      const obj_old = await prisma.feature.findUnique({
+        where: {
+          name,
+        },
+      });
+
+      const data = await prisma.feature.update({
+        where: {
+          name,
+        },
+        data: {
+          image: `${dotenv.parsed.FE_HOST}:${dotenv.parsed.FE_PORT}/images/data/${req.file.filename}`,
+        },
+      });
+
+
+      if (obj_old) {
+        link_img_old = obj_old.image
+        link_img_old = link_img_old.substring(link_img_old.lastIndexOf('/') + 1);
+        const filePath = "./public/images/data/"+link_img_old;
+        console.log("delete old image", filePath)
+        // Kiểm tra xem file có tồn tại không
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                console.error('File không tồn tại');
+                return;
+            }
+
+            // Xoá file
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Xảy ra lỗi khi xoá file:', err);
+                    return;
+                }
+                console.log('File đã được xoá thành công');
+            });
+        });
+      }
+
+      console.log("Done!");
+      res.status(200).json(data);
+    } catch (e) {
+      console.log(e)
+      res.status(400).json({message: "Feature update attempt failed!"})
+    }
+
+    
   },
   /**
    * @swagger
@@ -237,6 +295,63 @@ module.exports = {
       res.json(response);
     } catch (e) {
       res.status(400).json({message: "Feature delete attempt failed!"})
+    }
+  },
+  create_management: async (req, res) => {
+    const { properties, name, layer_name } = req.body;
+    try {
+
+      const layer_obj = await prisma.mapLayer.findFirst({where: {
+        url: {
+          contains: `:${layer_name}`
+        },
+      },})
+
+      const data = await prisma.feature.create({
+        data: {
+          name: name,
+          properties: JSON.stringify(properties),
+          layerId: layer_obj ? layer_obj.id : null,
+        },
+      });
+      console.log("Feature create success!")
+    } catch (e) {
+      console.log("Feature create failed!")
+      console.log(e)
+      console.log("----------------------")
+    }
+  },
+  delete_management: async (req, res) => {
+    const { name } = req.body;
+    console.log("-- post delete --", name)
+    try {
+      const response = await prisma.feature.delete({
+        where: {
+          name,
+        },
+      });
+      console.log("delete_done", name)
+      res.json(response);
+    } catch (e) {
+      res.status(400).json({message: "Feature delete attempt failed!"})
+    }
+  },
+  update_management: async (req, res) => {
+    const { properties, name } = req.body;
+    console.log("-- post update --", name)
+    try {
+      const data = await prisma.feature.update({
+        where: {
+          name,
+        },
+        data: {
+          properties: JSON.stringify(properties),
+        },
+      });
+      console.log("-- update done --", name)
+      res.json(data);
+    } catch {
+      res.status(400).json({message: "Feature update attempt failed!"})
     }
   },
 };

@@ -100,6 +100,7 @@ export default defineComponent({
         updateParams.description = value.description;
       if (value.workspace !== _props.workspace)
         updateParams.workspace = value.workspace;
+      
       if (value.view?.latitude !== _props.view.latitude) {
         Object.assign(updateParams, {
           ...updateParams,
@@ -109,6 +110,7 @@ export default defineComponent({
           },
         });
       }
+      
       updateParams.view.latitude = value.view.latitude;
       if (value.view?.longitude !== _props.view.longitude) {
         Object.assign(updateParams, {
@@ -119,6 +121,8 @@ export default defineComponent({
           },
         });
       }
+      updateParams.view.longitude = value.view.longitude;
+
       if (value.view?.projection !== _props.view.projection) {
         Object.assign(updateParams, {
           ...updateParams,
@@ -129,6 +133,10 @@ export default defineComponent({
         });
       }
       
+      console.log("coordinates:", _props.view?.projection?.name || "EPSG:4326")
+      console.log("coordinates:", _props.view?.projection?.definition || "")
+      console.log("coordinates:", value.view?.longitude || _props.view.longitude)
+      console.log("coordinates:", value.view?.latitude || _props.view.latitude)
       const longLat = transformProjection({
         to: _props.view?.projection?.name || "EPSG:4326",
         definition: _props.view?.projection?.definition || "",
@@ -137,6 +145,8 @@ export default defineComponent({
           parseFloat(value.view?.latitude || _props.view.latitude),
         ],
       });
+      console.log("extent: ",longLat);
+      console.log("longLat[0]: ",longLat[0]);
 
       Object.assign(updateParams, {
         ...updateParams,
@@ -151,6 +161,8 @@ export default defineComponent({
         },
       });
       if (updateParams.id) {
+        console.log("update location: " + updateParams.id);
+        console.log(updateParams);
         const response = await updateLocation(updateParams);
         const currentRow = props.locationRows.find(
           (row) => row.id === response.id
@@ -158,6 +170,8 @@ export default defineComponent({
         Object.assign(currentRow, { ...response });
         return;
       } else {
+        console.log("add location");
+        console.log(updateParams);
         delete updateParams.id;
         const response = await addLocaction(updateParams);
       }

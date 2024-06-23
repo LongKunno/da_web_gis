@@ -17,6 +17,13 @@ const routes = [
         name: "AddTree", // Đặt tên cho định tuyến
       },
       {
+        path: "dashboard-management",
+        component: () => import("pages/Dashboard/ApexChartTestIndex.vue"),
+        meta: {
+          authRequired: true,
+        },
+      },
+      {
         path: "user-management",
         component: () => import("pages/UserManagementPage.vue"),
         meta: {

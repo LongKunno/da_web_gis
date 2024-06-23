@@ -3,7 +3,7 @@
 <div class="chatbox-container">
 <div class="container" id="chatbox-gpt-ai-container">
   <h6 @click="hideChatAI"><i class="far fa-comments"></i> Chat Bot AI</h6>
-  <div class="messageBox mt-8">
+  <div id="scroll-msg-chat-ai" class="messageBox mt-8">
     <template v-for="(message, index) in messages" :key="index">
       <div :class="message.from == 'user' ? 'messageFromUser' : 'messageFromChatGpt'">
         <div :class="message.from == 'user' ? 'userMessageWrapper' : 'chatGptMessageWrapper'">
@@ -49,30 +49,77 @@ export default {
     return {
       currentMessage: '',
       messages: [],
+      messages_send_ai: [],
     };
   },
   methods: {
     async sendMessage(message) {
+
+
+      async function scrollToBottom() {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        var element = document.getElementById('scroll-msg-chat-ai');
+        element.scrollTop = element.scrollHeight;
+      }
+
+
+      // Hiển thị câu hỏi
       this.messages.push({
         from: 'user',
         data: message,
       });
-      this.currentMessage = '';
-      await axios
-        .post('http://localhost:3000/api/chatbot', {
-          message: message,
-        })
-       .then((response) => {
-          if (response.data.data != 'new_story'){
-            this.messages.push({
-            from: 'chatGpt',
-            data: response.data.data, // Access the 'data' property of the response object
-          });
-          }else{
-            this.messages = []
-            console.log(response.data.data)
-          }
+      scrollToBottom();
+      // Thêm vào lịch sử câu hỏi
+      this.messages_send_ai.push({
+        role: 'user',
+        content: message,
       });
+      this.currentMessage = '';
+     
+          try {
+            // Hiển thị thông báo
+            this.messages.push({
+                from: 'system',
+                data: "Vui lòng chờ trong giây lát!", // Access the 'data' property of the response object
+              });
+            scrollToBottom();
+            // Gửi dữ liệu
+            const response = await axios.post('http://localhost:11434/api/chat', {
+              model: "llama3",
+              messages: this.messages_send_ai,
+              stream: false
+            }).then((response) => {
+              if (message != ""){
+                // Hiển thị câu trả lời
+                this.messages.push({
+                  from: 'chatGpt',
+                  data: response.data.message.content, // Access the 'data' property of the response object
+                });
+                // thêm vào lịch sử
+                this.messages_send_ai.push(response.data.message);
+                // cuộn xuống dưới cùng
+                scrollToBottom();
+                // Xoá câu hỏi hệ thống
+                this.messages = this.messages.filter(function(message) {
+                    return message.from !== "system";
+                });
+              }else{
+                // Xoá dữ liệu câu hỏi
+                this.messages = [];
+                this.messages_send_ai = [];
+              }
+                
+            });
+          } catch (error) {
+            this.messages.push({
+                from: 'chatGpt',
+                data: "Hệ thống đang cập nhật! Vui lòng thử lại sau", // Access the 'data' property of the response object
+              });
+            scrollToBottom();
+            console.error('Error fetching data:', error);
+          }
+
+
     },
 
     hideChatAI() { 
