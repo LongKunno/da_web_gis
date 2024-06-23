@@ -1,6 +1,7 @@
 import _isFunction from "lodash/isFunction";
 import _isArray from "lodash/isArray";
 import GML from "ol/format/GML";
+import { api } from "boot/axios";
 import { Buffer } from "buffer";
 import { Point, LineString, Polygon } from 'ol/geom';
 import { Feature } from 'ol';
@@ -55,6 +56,10 @@ export const addXML = ({feature, workspace, layer, resolve = () => {}}) => {
     "</wfs:Insert>\n" +
     "</wfs:Transaction>\n";
   const insertRequestUrl = `${process.env.GEO_SERVER_URL}/${workspace}/wfs`;
+  console.log(geometryProperties);
+  
+  console.log("insertRequestUrl:", insertRequestUrl);
+  console.log("transactionXML:", transactionXML);
   fetch(insertRequestUrl, {
     mode:'cors',
     method: "POST",
@@ -77,11 +82,30 @@ export const addXML = ({feature, workspace, layer, resolve = () => {}}) => {
           icon: 'check_circle'
         })
         if(_isFunction(resolve)) resolve()
+
       }
       return response.text();
     })
     .then(function (responseText) {
       console.log(responseText);  
+      // Lấy id tree
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(responseText, "application/xml");
+      const namespaces = {
+          ogc: "http://www.opengis.net/ogc"
+      };
+      const featureIdElement = xmlDoc.evaluate('//ogc:FeatureId', xmlDoc, prefix => namespaces[prefix] || null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+      const id_tree = featureIdElement ? featureIdElement.getAttribute('fid') : null;
+
+      // Gọi hàm tạo database
+      api.post("features_management", {
+        properties: geometryProperties,
+        name: id_tree,
+        layer_name: id_tree.split('.')[0],
+      });
+      //-------------------------
+      // Print the result
+      console.log(id_tree.split('.')[0]);
       // Handle the response
     });
 };
@@ -122,6 +146,11 @@ export const deleteXML = ({feature, workspace, layer, resolve = () => {}}) => {
           color: 'primary',
           icon: 'check_circle'
         })
+        // Gọi hàm xoá database
+        api.post(`features_management/delete`, {
+          name: rid,
+        });
+      //-------------------------
         if(_isFunction(resolve)) resolve()
       }
       return response.text();
@@ -191,6 +220,21 @@ export const updateXML = ({feature, workspace='danang', layer, resolve = () => {
           color: 'primary',
           icon: 'check_circle'
         })
+        // Gọi hàm xoá database
+        console.log(a)
+        api.post(`features_management/update`, {
+          properties: {
+            "ten_cay": a.ten_cay,
+            "dia_chi": a.dia_chi,
+            "dac_diem": a.dac_diem,
+            "benh": a.benh,
+            "created_at": a.created_at,
+            "toado_x": a.toado_x,
+            "toado_y": a.toado_y,
+          },
+          name: rid,
+        });
+      //-------------------------
         if(_isFunction(resolve)) resolve()
       }
       return response.text();

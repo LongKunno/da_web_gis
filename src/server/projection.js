@@ -232,15 +232,18 @@ module.exports = {
    *         description: projection not found
    */
   delete: async (req, res) => {
-    const { name } = req.params;
+    var { id } = req.params;
+    id = parseInt(id)
+    console.log("delete projection ", id);
     try {
       const response = await prisma.projection.delete({
         where: {
-          name,
+          id,
         },
       });
       res.json(response);
-    } catch {
+    } catch (e) {
+      console.log("ERROR", e);
       res.status(400).json({message: "Projection delete attempt failed!"})
     }
   },

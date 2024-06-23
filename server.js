@@ -65,8 +65,12 @@ app.post('/api/features',featureAPI.create)
 app.get('/api/features/:name', featureAPI.get)
 app.delete('/api/features/:id', featureAPI.delete)
 app.put('/api/features/:id', featureAPI.update)
+// app.put('/api/features/image/:name', upload.single('image'), featureAPI.update_image)
 app.get('/api/mapLayers/:layerId/features', featureAPI.getByLayer)
 app.get('/api/mapLayers/:layerId/features/external', featureAPI.getByLayerExternal)
+app.post('/api/features_management',featureAPI.create_management)
+app.post('/api/features_management/delete',featureAPI.delete_management)
+app.post('/api/features_management/update',featureAPI.update_management)
 
 //location
 app.post('/api/locations', locationAPI.create)
@@ -80,13 +84,38 @@ app.get('/api/projections/:id',projectionAPI.get)
 app.get('/api/projections/name/:name',projectionAPI.getbyName)
 app.post('/api/projections', projectionAPI.create)
 app.put('/api/projections/:id', projectionAPI.update)
+app.delete('/api/projections/:id', projectionAPI.delete)
 // workspace
 app.get('/api/workspaces', workspaceAPI.getWorkspace)
 app.post('/api/workspaces/sync', workspaceAPI.syncWorkspace)
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server started on port ${process.env.PORT || 3000}`)
 })
+// Dashboard
+app.get('/api/chart_1', workspaceAPI.get_chart_1)
+app.get('/api/chart_2', workspaceAPI.get_chart_2)
+app.get('/api/chart_3', workspaceAPI.get_chart_3)
+app.get('/api/chart_4', workspaceAPI.get_chart_4)
+app.get('/api/chart_5', workspaceAPI.get_chart_5)
+app.get('/api/chart_6', workspaceAPI.get_chart_6)
 
 
 // projection
 app.post('/api/chatbot', chatGptController.askToChatGpt);
+
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images/data/');
+  },
+  filename: function (req, file, cb) {
+    const extension = path.extname(file.originalname);
+    cb(null, Date.now() + extension);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/api/features/image/:name', upload.single('image'), featureAPI.update_image);// Thư mục 'public/images/data/' sẽ lưu trữ file ảnh

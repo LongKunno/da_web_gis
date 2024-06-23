@@ -24,15 +24,17 @@ module.exports = {
    *         description: Invalid request
    */
   create: async (req, res) => {
+    console.log("Create location: ");
+    console.log("extent: ", req.body.view?.extent || "");
     try {
       const updateLocation = await prisma.location.create({
         data: {
           name: req.body.name || "",
           description: req.body.description || "",
-          workspace: req.body.workspace || "",
+          workspace: req.body.workspace.name || "",
           view: {
             create: {
-              extent: req.body.view?.extent || "",
+              extent: "[48097.93845681637,128667.997325129,5815097.9384568164,7188667.997325129]",
               longitude: parseFloat(req.body.view?.longitude) || 0,
               latitude: parseFloat(req.body.view?.latitude) || 0,
               projectionId: req.body.view.projection.id || undefined,
@@ -42,6 +44,7 @@ module.exports = {
       });
       res.json(updateLocation);
     } catch (e) {
+      console.log("ERROR", e);
       res.status(400).json({message: "Location create attempt failed!"})
     }
   },
@@ -183,7 +186,7 @@ module.exports = {
             },
           },
           orderBy: {
-            createdAt: "asc",
+            id: "asc",
           },
         }),
       ]);
@@ -234,7 +237,7 @@ module.exports = {
           workspace: req.body.workspace || undefined,
           view: {
             update: {
-              extent: req.body.view?.extent || undefined,
+              extent: '[48097.93845681637,128667.997325129,5815097.9384568164,7188667.997325129]',
               longitude: parseFloat(req.body.view?.longitude) || 0,
               latitude: parseFloat(req.body.view?.latitude) || 0,
               projectionId: req.body.view?.projection?.id || undefined,

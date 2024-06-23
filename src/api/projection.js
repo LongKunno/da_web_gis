@@ -64,6 +64,11 @@ export const deleteProjection = (params, resolve) => {
     persistent: true
   }).onOk(async () => {
     const response = await api.delete(`projections/${params.id}`)
+    Notify.create({
+      message:  $t('Success'),
+      color: 'primary',
+      icon: 'check_circle'
+    })
     resolve(response.data)
   }).onCancel(() => {
   }).onDismiss(() => {

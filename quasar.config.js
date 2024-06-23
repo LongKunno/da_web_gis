@@ -36,7 +36,8 @@ module.exports = configure(function (/* ctx */) {
       'i18n',
       'bus',
       'vue3openlayers',
-      'googleAuth'
+      'googleAuth',
+      'apexcharts'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

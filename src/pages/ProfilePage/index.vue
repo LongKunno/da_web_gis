@@ -1,5 +1,5 @@
 <template>
-  <div class="content" style="padding: 20px">
+  <div class="content">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-8">
