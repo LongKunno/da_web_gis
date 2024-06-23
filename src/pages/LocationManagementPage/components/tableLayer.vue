@@ -169,11 +169,11 @@ export default defineComponent({
         align: "center",
         label: $t("Features"),
       },
-      {
-        name: "action",
-        align: "center",
-        label: $t("Action"),
-      },
+      // {
+      //   name: "action",
+      //   align: "center",
+      //   label: $t("Action"),
+      // },
     ]);
     const layerPagination = ref({
       page: 1,

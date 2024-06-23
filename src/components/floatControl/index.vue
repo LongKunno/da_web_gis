@@ -120,4 +120,8 @@ body {
   padding: 0; 
   display: grid;
 }
+
+.q-tabs__arrow--right{
+  display: none;
+}
 </style>

@@ -125,8 +125,9 @@ export default {
   //Profile
   "First Name": "First Name",
   "Last Name": "Last Name",
-  "Date of Birth": "Date of Birth",
+  "Date of Birth": "Date of Birth (yyyy-mm-dd)",
   "Gender": "Gender",
+  "Gender_MALE_FEMALE": "Gender: MALE or FEMALE",
   "Phone Number" : "Phone Number",
   "Address": "Address",
   "Current Location": "Current Location",

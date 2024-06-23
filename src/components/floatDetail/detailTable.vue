@@ -1,6 +1,6 @@
 <template>
   <div v-if="role === 'ADMIN'" class="adminClass">
-    <q-btn v-if="ableToSave" class="gt-xs" size="12px" flat dense round icon="save" @click="dialog = true">
+    <q-btn v-if="!isEditting" class="gt-xs" size="12px" flat dense round icon="save" @click="dialog = true">
       <q-tooltip anchor="top middle" self="center middle">{{
         $t("Save to database")
       }}</q-tooltip>
@@ -32,7 +32,8 @@
         <q-tr :props="props">
           <q-td key="name" :props="props" class="captionClass" style="padding: 0">
             <span>
-              {{ props.row.name }}
+              {{ $t(props.row.name) }}
+              
             </span>
           </q-td>
           <q-td key="value" :props="props" style="padding: 0">

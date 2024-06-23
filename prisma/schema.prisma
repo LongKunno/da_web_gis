@@ -38,7 +38,6 @@ model User {
   password String   @db.VarChar(32)
   role     Role     @default(USER)
   activate Boolean  @default(true)
-  posts    Post[]
   profile  Profile?
 
   createdAt DateTime? @default(now())
@@ -77,16 +76,6 @@ model Profile {
 
   @@fulltext([name, email])
   @@map(name: "profile")
-}
-
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  String
-  @@map(name: "post")
 }
 
 model Location {

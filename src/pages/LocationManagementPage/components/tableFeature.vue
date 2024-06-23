@@ -101,7 +101,7 @@ export default defineComponent({
         label: $t("Properties"),
         style: "min-width: 500px; width: 500px;",
       },
-      { name: "action", align: "center", label: $t("Action") },
+      // { name: "action", align: "center", label: $t("Action") },
     ]);
     const featurePagination = ref({
       page: 1,

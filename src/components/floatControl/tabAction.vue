@@ -180,7 +180,7 @@ export default defineComponent({
     const buttonModel = ref();
     const options = [
       // { icon: "straighten", value: "LineString", slot: "one" },
-      { value: "Point", slot: "two" },
+      { id: "btn-choose-address-add-tree", value: "Point", slot: "two" },
       { icon: "place", value: "Modify", slot: "three" },
     ];
     // geolocation
@@ -316,6 +316,12 @@ export default defineComponent({
 
       if (type === "Point") {
         unref(map).on("singleclick", async function (evt) {
+          var element = document.getElementById("btn-choose-address-add-tree");
+          var ariaPressedValue = element.getAttribute('aria-pressed');
+          if (ariaPressedValue == "true") {
+            document.getElementById("btn-choose-address-add-tree").click();
+          }
+          
           const coordinate = evt.coordinate;
           console.log("1", coordinate);
           const pixel = evt.map.getCoordinateFromPixel(coordinate);

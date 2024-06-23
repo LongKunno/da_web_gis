@@ -85,18 +85,20 @@ module.exports = {
         },
         data: {
           sub: profile.sub || undefined,
-          email: profile.email || undefined,
+          // email: profile.email || undefined,
           name: profile.name || undefined,
           given_name: profile.given_name || undefined,
           family_name: profile.family_name || undefined,
           picture: profile.picture || undefined,
           gender: profile.gender || undefined,
           address: profile.address || undefined,
-          birthday: profile.birthday || undefined,
+          birthday: profile.birthday ? new Date(profile.birthday) : undefined,
         },
       });
+      console.log("-- update profile done --");
       res.json(data);
-    } catch {
+    } catch (e) {
+      console.log(e);
       res.status(400).json({message: "Profile update attempt failed!"})
     }
   },
@@ -145,6 +147,7 @@ module.exports = {
           id,
         },
       });
+      console.log("-- delete profile done --");
       res.json(response);
     } catch {
       res.status(400).json({message: "Profile delete attempt failed!"})

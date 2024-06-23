@@ -1,6 +1,7 @@
 const { PrismaClient, FeatureType } = require("@prisma/client");
 const prisma = new PrismaClient();
 const fs = require('fs');
+const path = require('path');
 const dotenv = require('dotenv').config();
 module.exports = {
   /**
@@ -94,16 +95,11 @@ module.exports = {
     console.log(req.file.path)
     console.log(req.file.filename)
     try {
-      const obj_old = await prisma.feature.findMany({
+      const obj_old = await prisma.feature.findUnique({
         where: {
           name,
         },
       });
-
-      if (obj_old) {
-        link_img_old = obj_old.image
-        console.log("delete old image", link_img_old)
-      }
 
       const data = await prisma.feature.update({
         where: {
@@ -114,12 +110,38 @@ module.exports = {
         },
       });
 
+
+      if (obj_old) {
+        link_img_old = obj_old.image
+        link_img_old = link_img_old.substring(link_img_old.lastIndexOf('/') + 1);
+        const filePath = "./public/images/data/"+link_img_old;
+        console.log("delete old image", filePath)
+        // Kiểm tra xem file có tồn tại không
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                console.error('File không tồn tại');
+                return;
+            }
+
+            // Xoá file
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Xảy ra lỗi khi xoá file:', err);
+                    return;
+                }
+                console.log('File đã được xoá thành công');
+            });
+        });
+      }
+
       console.log("Done!");
       res.status(200).json(data);
     } catch (e) {
       console.log(e)
       res.status(400).json({message: "Feature update attempt failed!"})
     }
+
+    
   },
   /**
    * @swagger

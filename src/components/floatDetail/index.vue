@@ -1,9 +1,9 @@
 <template>
   <q-page-sticky class="stickyClass" position="top-right" :offset="[10, 10]">
     <q-card class="my-card form-update-img" flat bordered style="width: 400px">
-      <q-carousel swipeable animated v-model="slideImage" control-color="secondary" navigation infinite
+      <q-carousel swipeable animated v-model="slideImage" control-color="secondary" infinite
         ref="carousel" style="height: 200px;">
-        <q-carousel-slide :name="1" :img-src="image" @click="addImage"/>
+        <q-carousel-slide :name="1" :img-src="image" @click="addImage" id="popup-image-detail"/>
         <template v-slot:control>
           <q-carousel-control position="top-left" class="text-white rounded-borders">
             <q-btn class="absolute shadow-2 closeClass" round color="white" text-color="black" icon="close" size="sm"
@@ -159,7 +159,9 @@ export default defineComponent({
 
           // console.log(response.data);
           // floatDetailProps.value.image = response.data.image;
-          window.location.reload();
+          var element = document.getElementById('popup-image-detail');
+          element.style.backgroundImage = `url('${response.data.image}')`;
+          // window.location.reload();
       };
 
         fileInput.click();
