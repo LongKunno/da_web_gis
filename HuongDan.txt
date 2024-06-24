@@ -1,0 +1,8 @@
+// Chạy models Chat AI
+    ollama run llama3 (mở terminal và chạy để khởi động)
+
+// Chạy chương trình:
+// FE
+    quasar dev
+// BE
+    npm start
