@@ -30,7 +30,7 @@
     </template>
 
     <template v-slot:three>
-      <q-tooltip>moving </q-tooltip>
+      <q-tooltip>{{ $t("Current location") }} </q-tooltip>
     </template>
   </q-btn-toggle>
   <q-separator />
@@ -181,7 +181,7 @@ export default defineComponent({
     const options = [
       // { icon: "straighten", value: "LineString", slot: "one" },
       { id: "btn-choose-address-add-tree", value: "Point", slot: "two" },
-      { icon: "place", value: "Modify", slot: "three" },
+      { icon: "place", value: "place", slot: "three" },
     ];
     // geolocation
     const geoLocation = ref(null);
