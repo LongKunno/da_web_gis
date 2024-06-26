@@ -1,4 +1,4 @@
-const { PrismaClient, FeatureType } = require("@prisma/client");
+const { PrismaClient, FeatureType, Prisma } = require("@prisma/client");
 const prisma = new PrismaClient();
 const fs = require('fs');
 const path = require('path');
@@ -91,7 +91,8 @@ module.exports = {
   update_image: async (req, res) => {
     const imageBuffer = fs.readFileSync(req.file.path);
     // const imageBytes = Buffer.from(imageBuffer).toString('base64');
-    const { name } = req.params;
+    var { name } = req.params;
+    console.log(name)
     console.log(req.file.path)
     console.log(req.file.filename)
     try {
@@ -101,17 +102,37 @@ module.exports = {
         },
       });
 
-      const data = await prisma.feature.update({
-        where: {
-          name,
-        },
-        data: {
-          image: `${dotenv.parsed.FE_HOST}:${dotenv.parsed.FE_PORT}/images/data/${req.file.filename}`,
-        },
-      });
+      if (name != 'null'){
+        var data = await prisma.feature.update({
+          where: {
+            name,
+          },
+          data: {
+            image: `${dotenv.parsed.FE_HOST}:${dotenv.parsed.FE_PORT}/images/data/${req.file.filename}`,
+          },
+        });
+      }else{
+        const latestFeature = await prisma.feature.findFirst({
+          orderBy: {
+            createdAt: Prisma.SortOrder.desc,
+          },
+        });
+
+        var data = await prisma.feature.update({
+          where: {
+            id: latestFeature.id,
+          },
+          data: {
+            image: `${dotenv.parsed.FE_HOST}:${dotenv.parsed.FE_PORT}/images/data/${req.file.filename}`,
+          },
+        });
+
+        name = data.name;
+      }
+      
 
 
-      if (obj_old) {
+      if (obj_old && obj_old.image) {
         link_img_old = obj_old.image
         link_img_old = link_img_old.substring(link_img_old.lastIndexOf('/') + 1);
         const filePath = "./public/images/data/"+link_img_old;
