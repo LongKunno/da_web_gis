@@ -39,6 +39,7 @@ export default {
   Add: "Thêm mới",
   "Current location": "Vị trí hiện tại",
   Help: "Trợ giúp",
+  move:"di chuyển",
   // Float control
   Layer: "Layer",
   Action: "Tương tác",

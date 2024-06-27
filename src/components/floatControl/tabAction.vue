@@ -13,15 +13,9 @@
     @clear="clearControl"
   >
     <!-- <template v-slot:one>
-      <q-badge
-        v-if="lineStringCount > 0"
-        color="yellow"
-        text-color="white"
-        floating
-      >
-        {{ lineStringCount }}
-      </q-badge>
-      <q-tooltip>{{ $t("Distance") }}</q-tooltip>
+      
+      
+      <q-tooltip>{{$t ("move")}}</q-tooltip>
     </template> -->
 
     <template v-slot:two>
@@ -179,7 +173,7 @@ export default defineComponent({
 
     const buttonModel = ref();
     const options = [
-      // { icon: "straighten", value: "LineString", slot: "one" },
+      // { icon: "moving", value: "Modify", slot: "one" },
       { id: "btn-choose-address-add-tree", value: "Point", slot: "two" },
       { icon: "place", value: "place", slot: "three" },
     ];
