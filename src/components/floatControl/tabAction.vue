@@ -317,7 +317,6 @@ export default defineComponent({
           }
           
           const coordinate = evt.coordinate;
-          console.log("1", coordinate);
           const pixel = evt.map.getCoordinateFromPixel(coordinate);
           const feature = vector.value
             .getSource()
@@ -354,6 +353,7 @@ export default defineComponent({
           });
           // $bus.emit("on-show-detail", { content: geoJsonData });
         });
+        deleteDraw(-1);
       }
 
       unref(map).addInteraction(unref(draw));
